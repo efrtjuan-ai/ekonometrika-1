@@ -1,0 +1,1602 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light dark}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Ekonomet Pink Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Figtree:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{
+  --bg:#FFF4F7; --surface:#FFFFFF; --soft:#FFE3EC; --soft2:#FCEFF4; --line:#F3C9D8;
+  --ink:#3B2332; --muted:#86637A; --accent:#E0608F; --accent-ink:#B8386A; --lav:#9A7FD6; --lav-soft:#EEE7FB;
+  --mint:#3E9D7E; --mint-soft:#DDF3EA; --warn:#C98A1B; --warn-soft:#FBEFD6; --bad:#CF4B5B;
+  --code-bg:#2E1F2A; --code-ink:#FBE6EE; --code-kw:#FF9EC4; --code-cm:#B79BAE; --code-str:#B6E3C9;
+  --shadow:0 10px 30px -18px rgba(184,56,106,.45);
+  --display:"Fredoka","Trebuchet MS",system-ui,sans-serif;
+  --body:"Figtree","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --math:"STIX Two Text","Cambria Math","Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1F1519; --surface:#2A1D24; --soft:#3A2632; --soft2:#31212A; --line:#4E3441;
+    --ink:#F8E6EE; --muted:#C7A3B6; --accent:#F58FB5; --accent-ink:#FFB3CF; --lav:#B9A3EC; --lav-soft:#33294A;
+    --mint:#7FD3B3; --mint-soft:#1F3A31; --warn:#F0BE63; --warn-soft:#3D301A; --bad:#FF8A98;
+    --code-bg:#150D11; --shadow:0 10px 30px -18px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+    --bg:#1F1519; --surface:#2A1D24; --soft:#3A2632; --soft2:#31212A; --line:#4E3441;
+    --ink:#F8E6EE; --muted:#C7A3B6; --accent:#F58FB5; --accent-ink:#FFB3CF; --lav:#B9A3EC; --lav-soft:#33294A;
+    --mint:#7FD3B3; --mint-soft:#1F3A31; --warn:#F0BE63; --warn-soft:#3D301A; --bad:#FF8A98;
+    --code-bg:#150D11; --shadow:0 10px 30px -18px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65}
+a{color:var(--accent-ink)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--lav);outline-offset:2px;border-radius:6px}
+
+.app{display:grid;grid-template-columns:290px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:env(safe-area-inset-top,0px);height:100vh;overflow:auto;padding:22px 16px 40px;border-right:1px dashed var(--line);background:var(--soft2)}
+.brand{display:flex;gap:10px;align-items:center;margin:0 6px 6px}
+.brand .dot{width:38px;height:38px;border-radius:12px;background:var(--accent);display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:700;font-size:20px;transform:rotate(-6deg)}
+.brand b{font-family:var(--display);font-size:21px;line-height:1.1}
+.brand small{display:block;color:var(--muted);font-size:12px;letter-spacing:.04em}
+.prog{margin:14px 6px 18px;font-size:13px;color:var(--muted)}
+.bar{height:9px;background:var(--soft);border-radius:99px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--lav));border-radius:99px;transition:width .4s}
+.navgroup{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:16px 8px 6px;font-weight:700}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{all:unset;cursor:pointer;display:grid;grid-template-columns:26px 1fr 16px;gap:8px;align-items:center;padding:7px 8px;border-radius:10px;font-size:14.5px}
+.nav button:hover{background:var(--soft)}
+.nav button[aria-current="true"]{background:var(--surface);box-shadow:var(--shadow);font-weight:700}
+.nav .n{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:right}
+.nav .ck{width:14px;height:14px;border-radius:50%;border:2px solid var(--line)}
+.nav .ck.done{background:var(--mint);border-color:var(--mint)}
+.menu-btn{display:none}
+
+main{padding-inline:clamp(16px,4vw,56px);padding-block:28px 80px;min-width:0}
+.wrap{max-width:860px;margin:0 auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.crumb{font-size:13px;color:var(--muted);letter-spacing:.03em}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 11px;border-radius:99px;background:var(--soft);color:var(--accent-ink);font-size:12.5px;font-weight:700}
+.pill.lav{background:var(--lav-soft);color:var(--lav)}
+.pill.mint{background:var(--mint-soft);color:var(--mint)}
+
+section.mod{display:none}
+section.mod.on{display:block;animation:rise .35s ease}
+@keyframes rise{from{transform:translateY(8px);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){section.mod.on{animation:none}.bar i{transition:none}}
+
+h1{font-family:var(--display);font-weight:700;font-size:clamp(32px,5vw,50px);line-height:1.05;margin:8px 0 12px;text-wrap:balance;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--accent)}
+h2{font-family:var(--display);font-weight:600;font-size:26px;margin:40px 0 10px;text-wrap:balance}
+h3{font-family:var(--display);font-weight:600;font-size:19px;margin:24px 0 6px}
+p,li{max-width:68ch}
+.lead{font-size:18.5px;color:var(--muted)}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+.muted{color:var(--muted)}
+hr{border:0;border-top:1px dashed var(--line);margin:36px 0}
+
+.story{background:var(--surface);border:1.5px solid var(--line);border-radius:20px;padding:18px 20px;margin:20px 0;position:relative}
+.story .tag{position:absolute;top:-12px;left:16px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;padding:2px 10px;border-radius:99px;letter-spacing:.04em}
+.key{background:var(--lav-soft);border-radius:16px;padding:14px 18px;margin:18px 0}
+.key b.t,.warn b.t,.tip b.t{display:block;font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:2px}
+.key b.t{color:var(--lav)}
+.warn{background:var(--warn-soft);border-radius:16px;padding:14px 18px;margin:18px 0}
+.warn b.t{color:var(--warn)}
+.tip{background:var(--mint-soft);border-radius:16px;padding:14px 18px;margin:18px 0}
+.tip b.t{color:var(--mint)}
+.formula{font-family:var(--mono);font-size:16.5px;background:var(--soft2);border:1px dashed var(--line);border-radius:14px;padding:14px 18px;margin:14px 0;overflow-x:auto;white-space:nowrap;text-align:center}
+sub,sup{font-size:.72em}
+
+.code{position:relative;background:var(--code-bg);color:var(--code-ink);border-radius:16px;margin:14px 0;overflow:hidden}
+.code .hd{display:flex;justify-content:space-between;align-items:center;padding:7px 12px 7px 16px;font-size:12px;color:var(--code-cm);border-bottom:1px solid rgba(255,255,255,.08);font-family:var(--mono)}
+.code .hd button{background:rgba(255,158,196,.16);border:0;color:var(--code-kw);border-radius:8px;padding:3px 10px;cursor:pointer;font-size:12px}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.6}
+.code .c{color:var(--code-cm);font-style:italic}.code .k{color:var(--code-kw);font-weight:600}.code .s{color:var(--code-str)}
+
+.out{font-family:var(--mono);font-size:12.5px;line-height:1.45;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px;overflow-x:auto;white-space:pre;margin:12px 0}
+.out .hl{background:var(--soft);color:var(--accent-ink);border-radius:4px;cursor:pointer;padding:0 2px;font-weight:600}
+.out .hl.on{background:var(--accent);color:#fff}
+.explain{min-height:64px;background:var(--soft2);border-radius:14px;padding:12px 16px;border:1px dashed var(--line)}
+
+table.t{border-collapse:collapse;width:100%;font-size:14.5px;margin:10px 0}
+.tw{overflow-x:auto}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+table.t th{font-family:var(--display);font-weight:600;background:var(--soft2)}
+table.t code,p code,li code,td code{font-family:var(--mono);font-size:.88em;background:var(--soft);padding:1px 6px;border-radius:6px;color:var(--accent-ink)}
+
+.lab{background:var(--surface);border:2px solid var(--accent);border-radius:22px;padding:18px;margin:22px 0;box-shadow:var(--shadow)}
+.lab .lt{display:flex;gap:8px;align-items:center;font-family:var(--display);font-weight:600;font-size:18px;margin-bottom:8px;flex-wrap:wrap}
+.lab canvas{width:100%;max-width:100%;display:block;background:var(--soft2);border-radius:14px;touch-action:none}
+.ctrls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:12px 0;font-size:14px}
+.ctrls label{display:flex;align-items:center;gap:8px}
+.ctrls input[type=range]{accent-color:var(--accent);width:140px}
+.ctrls select,.ctrls input[type=number]{background:var(--soft2);border:1px solid var(--line);border-radius:8px;padding:4px 8px;color:var(--ink);font:inherit}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:99px;padding:7px 16px;font-weight:700;cursor:pointer}
+.btn.ghost{background:var(--soft);color:var(--accent-ink)}
+.stats{display:flex;flex-wrap:wrap;gap:8px}
+.stat{background:var(--soft2);border-radius:12px;padding:6px 12px;font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
+.stat b{color:var(--accent-ink)}
+
+.quiz{margin:26px 0;border-top:2px dotted var(--line);padding-top:10px}
+.q{background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:14px 18px;margin:12px 0}
+.q p{margin:0 0 8px;font-weight:600}
+.q .opts{display:flex;flex-direction:column;gap:6px}
+.q button{text-align:left;background:var(--soft2);border:1.5px solid transparent;border-radius:12px;padding:8px 12px;cursor:pointer;font-size:15px}
+.q button:hover{border-color:var(--line)}
+.q button.right{background:var(--mint-soft);border-color:var(--mint)}
+.q button.wrong{background:var(--warn-soft);border-color:var(--warn)}
+.q .fb{font-size:14px;margin-top:8px;color:var(--muted)}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:16px 0}
+.tile{background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:14px 16px}
+.tile h4{font-family:var(--display);font-weight:600;margin:0 0 4px;font-size:17px}
+.tile p{margin:0;font-size:14.5px;color:var(--muted)}
+.tile.click{cursor:pointer;transition:transform .15s}
+.tile.click:hover{transform:translateY(-3px);border-color:var(--accent)}
+
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:center}
+.hero svg{width:100%;height:auto}
+.next{display:flex;justify-content:space-between;gap:10px;margin-top:40px;flex-wrap:wrap}
+.donebtn{background:var(--mint);color:#fff}
+
+.search{width:100%;padding:12px 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;margin:10px 0}
+.flip{perspective:800px;cursor:pointer;min-height:120px}
+.flip .in{position:relative;min-height:120px;transition:transform .5s;transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .fa,.flip .fb2{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;padding:14px 16px;display:flex;align-items:center;justify-content:center;text-align:center}
+.flip .fa{background:var(--soft);font-family:var(--display);font-weight:600;font-size:18px}
+.flip .fb2{background:var(--lav-soft);transform:rotateY(180deg);font-size:14.5px}
+
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 25% 0 0;z-index:20;transform:translateX(-105%);transition:transform .25s;height:100%;padding-top:calc(22px + env(safe-area-inset-top,0px));box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  .hero{grid-template-columns:1fr}
+}
+@media (max-width:520px){.side{inset:0 12% 0 0}}
+
+.bedah{background:var(--surface);border:1.5px dashed var(--accent);border-radius:18px;padding:12px 16px 14px;margin:14px 0}
+.bh{font-family:var(--display);font-weight:600;font-size:15px;color:var(--accent-ink);margin-bottom:6px}
+.bh .muted{font-family:var(--body);font-weight:400;font-size:13px}
+.bf{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 6px;font-family:var(--mono);font-size:22px;padding:6px 0 10px}
+.bf .op{color:var(--muted);padding:0 2px}
+.sym{font-family:var(--mono);font-size:22px;background:var(--soft);color:var(--ink);border:1.5px solid transparent;border-radius:10px;padding:0 9px;cursor:pointer;line-height:1.5}
+.sym:hover{border-color:var(--accent)}
+.sym.on{background:var(--accent);color:#fff}
+.bx{background:var(--soft2);border-radius:12px;padding:10px 14px;font-size:15px}
+.bx .sn{font-family:var(--display);font-weight:600;font-size:16px}
+.bx .ex{display:block;margin-top:4px;color:var(--muted);font-size:14px}
+.kamus{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.km{display:grid;grid-template-columns:54px 1fr;gap:10px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.km .g{font-family:var(--mono);font-size:20px;text-align:center;background:var(--soft);border-radius:10px;padding:2px 0}
+.km b{font-size:14.5px}.km p{margin:2px 0 0;font-size:13.5px;color:var(--muted)}
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;background:var(--lav);color:#fff;border:0;border-radius:99px;padding:10px 16px;font-weight:700;cursor:pointer;box-shadow:var(--shadow)}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:min(440px,100%);z-index:40;background:var(--bg);border-left:1px solid var(--line);box-shadow:var(--shadow);overflow:auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.drawer .kamus{grid-template-columns:1fr}
+.dh{display:flex;justify-content:space-between;align-items:center;font-family:var(--display);font-size:20px}
+</style>
+<style>
+.formula,.bf,.sym,.km .g,table.t td code{font-family:var(--math)}
+.formula{font-size:19px}.sym,.bf{font-size:24px}
+</style>
+<style>
+.hat{position:relative;display:inline-block}
+.hat::before{content:"^";position:absolute;left:0;right:0;top:-.42em;text-align:center;font-size:.85em;line-height:1}
+.hat.til::before{content:"~";top:-.5em}
+.mth{font-family:var(--math)}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side" id="side">
+  <div class="brand"><span class="dot">β</span><div><b>Ekonomet Pink Lab</b><small>EKONOMETRIKA 1 · PAKAI STATA</small></div></div>
+  <div class="prog"><span id="progtxt">0 dari 19 bab selesai</span><div class="bar"><i id="progbar"></i></div></div>
+  <nav id="nav"></nav>
+</aside>
+<main>
+<div class="wrap">
+<div class="topbar">
+  <button class="btn ghost menu-btn" id="menuBtn" aria-controls="side">☰ Daftar bab</button>
+  <span class="crumb" id="crumb"></span>
+</div>
+
+<!-- ============ M0 ============ -->
+<section class="mod" id="m0" data-g="Mulai" data-t="Peta belajar">
+<div class="hero">
+<div>
+<span class="pill">Selamat datang di lab 🎀</span>
+<h1>Belajar ekonometrika <em>pelan-pelan</em>, dari nol sampai ARIMA.</h1>
+<p class="lead">Satu bab, satu ide besar. Tiap bab punya cerita properti, rumus yang dijelaskan dengan bahasa manusia, lab interaktif, kode Stata siap salin, dan kuis kecil.</p>
+<div class="stats" style="margin-top:14px"><span class="pill lav">19 bab</span><span class="pill mint">8 lab interaktif</span><span class="pill">± 60 perintah Stata</span></div>
+</div>
+<svg viewBox="0 0 320 240" role="img" aria-label="Ilustrasi garis regresi melewati titik-titik">
+  <rect x="0" y="0" width="320" height="240" rx="26" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/>
+  <line x1="40" y1="200" x2="290" y2="200" stroke="var(--line)" stroke-width="2"/>
+  <line x1="40" y1="30" x2="40" y2="200" stroke="var(--line)" stroke-width="2"/>
+  <g fill="var(--accent)" opacity=".85">
+    <circle cx="70" cy="170" r="7"/><circle cx="95" cy="160" r="7"/><circle cx="120" cy="135" r="7"/><circle cx="150" cy="140" r="7"/>
+    <circle cx="175" cy="110" r="7"/><circle cx="200" cy="105" r="7"/><circle cx="230" cy="80" r="7"/><circle cx="260" cy="70" r="7"/>
+  </g>
+  <line x1="55" y1="182" x2="280" y2="60" stroke="var(--lav)" stroke-width="5" stroke-linecap="round"/>
+  <line x1="150" y1="140" x2="150" y2="129" stroke="var(--ink)" stroke-dasharray="3 3"/>
+  <text x="160" y="160" font-family="JetBrains Mono,monospace" font-size="12" fill="var(--muted)">û = y − ŷ</text>
+  <text x="200" y="40" font-family="Fredoka,sans-serif" font-size="18" fill="var(--accent-ink)">ŷ = β̂₀ + β̂₁x</text>
+</svg>
+</div>
+
+<h2>Cara pakai website ini</h2>
+<div class="grid2">
+  <div class="tile"><h4>Urut dari atas</h4><p>Bab disusun seperti tangga. Jangan lompat ke logit sebelum paham regresi berganda.</p></div>
+  <div class="tile"><h4>Buka Stata di sebelah</h4><p>Setiap blok kode gelap bisa disalin. Tempel ke do-file, blok, lalu tekan <b>Ctrl/⌘ + D</b>.</p></div>
+  <div class="tile"><h4>Mainkan lab-nya</h4><p>Geser slider, klik titik. Intuisi dulu, rumus menyusul.</p></div>
+  <div class="tile"><h4>Centang “Selesai”</h4><p>Progres tersimpan di browser ini, jadi kamu bisa lanjut kapan saja.</p></div>
+</div>
+
+<h2>Peta perjalanan</h2>
+<p>Materi mengikuti kontrak kuliah Ekonometrika 1 (14 sesi, Wooldridge sebagai buku utama), ditambah bab Stata di awal serta <b>time series &amp; ARIMA</b> dan <b>data panel</b> sebagai bonus.</p>
+<div class="grid2" id="mapTiles"></div>
+
+<div class="key"><b class="t">Satu kalimat untuk diingat sepanjang semester</b>Ekonometrika = teori ekonomi memberi <i>arah</i>, matematika memberi <i>bentuk</i>, statistika memberi <i>angka dan ketidakpastiannya</i>.</div>
+</section>
+
+<!-- ============ M1 ============ -->
+<section class="mod" id="m1" data-g="Stata dulu" data-t="Kenalan dengan Stata">
+<span class="pill lav">Bab 1 · Software</span>
+<h1>Kenalan dengan <em>Stata</em></h1>
+<p class="lead">Stata itu seperti asisten yang hanya mengerti perintah tertulis. Sekali kamu tahu “tata bahasanya”, semua analisis terasa mirip.</p>
+
+<h2>Lima jendela yang kamu lihat</h2>
+<div class="tw"><table class="t">
+<tr><th>Jendela</th><th>Fungsinya</th><th>Analogi</th></tr>
+<tr><td><b>Command</b></td><td>Ketik satu perintah, tekan Enter.</td><td>Chat singkat</td></tr>
+<tr><td><b>Results</b></td><td>Tempat hasil muncul (tabel, error merah).</td><td>Balasan chat</td></tr>
+<tr><td><b>Variables</b></td><td>Daftar variabel di data yang terbuka.</td><td>Daftar kolom Excel</td></tr>
+<tr><td><b>Review/History</b></td><td>Riwayat perintah; klik untuk ulang.</td><td>Riwayat chat</td></tr>
+<tr><td><b>Do-file Editor</b></td><td>Naskah perintah yang bisa disimpan dan dijalankan ulang.</td><td>Resep masakan ✨</td></tr>
+</table></div>
+
+<div class="tip"><b class="t">Kebiasaan emas</b>Selalu kerja di <b>do-file</b> (Window → Do-file Editor, atau ketik <code>doedit</code>). Command window hanya untuk coba-coba. Dosen dan tugas menilai do-file + log, bukan klik-klik menu.</div>
+
+<h2>Tata bahasa Stata</h2>
+<p>Hampir semua perintah mengikuti pola yang sama:</p>
+<div class="formula">perintah  daftar_variabel  [if kondisi]  [in rentang]  [, opsi]</div>
+<div class="code" data-t="contoh-sintaks.do"><pre>summarize price sqrft                  // perintah + variabel
+summarize price if bdrms &gt;= 4          // pakai syarat
+list price sqrft in 1/5                // baris 1 sampai 5
+regress price sqrft, robust            // opsi setelah koma
+tabulate colonial, missing             // tampilkan juga missing</pre></div>
+
+<h2>Template do-file yang rapi</h2>
+<p>Salin ini sebagai kerangka setiap tugas. Mirip dengan struktur do-file Tugas 2 kamu, sudah benar arahnya!</p>
+<div class="code" data-t="template_tugas.do"><pre>********************************************
+* Nama  : ...
+* NIU   : ...
+* Tugas : Ekonometrika 1 - Tugas X
+********************************************
+clear all
+set more off
+version 17                               // sesuaikan versi Stata kamu
+
+cd "/Users/.../Ekonometrika I/Tugas X"   // folder kerja
+capture log close
+log using "tugasX_log.log", text replace // simpan semua output
+
+* 1. Import data
+import excel "data.xlsx", sheet("data_raw") firstrow clear
+
+* 2. Eksplorasi &amp; pembersihan
+describe
+summarize
+
+* 3. Estimasi
+regress y x1 x2
+
+* 4. Simpan
+save "data_bersih.dta", replace
+log close</pre></div>
+
+<h2>Cara menjalankan &amp; minta tolong</h2>
+<ul>
+<li>Blok baris → <b>Ctrl + D</b> (Windows) / <b>⌘ + Shift + D</b> (Mac) untuk <i>Do</i>.</li>
+<li><code>help regress</code> membuka manual lengkap. Bagian <i>Examples</i> paling berguna.</li>
+<li><code>search heteroskedasticity</code> mencari topik; <code>ssc install nama</code> memasang paket tambahan.</li>
+<li>Komentar: <code>*</code> di awal baris, <code>//</code> di tengah baris, <code>/* ... */</code> untuk banyak baris. Baris panjang disambung dengan <code>///</code>.</li>
+<li>Singkatan boleh: <code>reg</code>=regress, <code>sum</code>=summarize, <code>tab</code>=tabulate, <code>gen</code>=generate.</li>
+</ul>
+
+<h2>Dataset latihan sepanjang website</h2>
+<p>Kita pakai data buku Wooldridge. Pasang sekali:</p>
+<div class="code" data-t="setup.do"><pre>ssc install bcuse, replace   // butuh internet, sekali saja
+bcuse hprice1, clear         // 88 rumah: price, sqrft, bdrms, lotsize, colonial ...
+describe</pre></div>
+<div class="story"><span class="tag">Kenapa hprice1?</span>Kuliahmu memakai contoh <b>penilaian properti</b> di hampir setiap sesi. <code>hprice1</code> berisi harga rumah (ribu USD), luas bangunan (<code>sqrft</code>), jumlah kamar tidur (<code>bdrms</code>), luas tanah (<code>lotsize</code>), dan dummy gaya kolonial. Model hedonik mini yang pas!</div>
+
+<div class="warn"><b class="t">Error yang paling sering muncul</b>
+<code>no; data in memory would be lost</code> → tambahkan <code>, clear</code>.<br>
+<code>variable x not found</code> → cek ejaan di jendela Variables (Stata peka huruf besar-kecil).<br>
+<code>type mismatch</code> → variabel angka tersimpan sebagai teks; pakai <code>destring x, replace</code>.<br>
+<code>r(601) file not found</code> → folder <code>cd</code> belum benar; cek dengan <code>pwd</code> dan <code>dir</code>.</div>
+
+<div class="quiz">
+<div class="q" data-a="2"><p>Kamu ingin output regresi ikut tersimpan ke file untuk dikumpulkan. Perintah apa yang dipakai di awal do-file?</p><div class="opts"><button>save</button><button>export excel</button><button>log using</button></div><div class="fb" data-why="log using merekam semua yang tampil di Results; save hanya menyimpan data (.dta)."></div></div>
+<div class="q" data-a="0"><p>Di mana posisi opsi seperti <code>robust</code>?</p><div class="opts"><button>Setelah tanda koma, di akhir perintah</button><button>Sebelum nama perintah</button><button>Di dalam tanda kurung variabel</button></div><div class="fb" data-why="Pola Stata: perintah varlist [if] [in] , opsi."></div></div>
+</div>
+</section>
+
+<!-- ============ M2 ============ -->
+<section class="mod" id="m2" data-g="Stata dulu" data-t="Data &amp; pembersihan">
+<span class="pill lav">Bab 2 · Software</span>
+<h1>Merapikan data <em>sebelum</em> meregresi</h1>
+<p class="lead">Regresi yang canggih di atas data kotor tetap menghasilkan sampah. Pembersihan data adalah 60% pekerjaan, dan itu yang diuji di Tugas 2.</p>
+
+<div class="story"><span class="tag">Cerita</span>Kamu dapat file penjualan 120 outlet. Ada id kembar, wilayah ditulis “ jogja”, “JOGJA”, dan “Jogja ”, promosi bernilai −5, dan umur usaha kosong. Kalau langsung <code>regress</code>, Stata tidak protes, tapi hasilnya menyesatkan.</div>
+
+<h2>Alur 5 langkah</h2>
+<div class="grid2">
+<div class="tile"><h4>1 · Masukkan</h4><p><code>import excel</code>, <code>import delimited</code>, <code>use</code></p></div>
+<div class="tile"><h4>2 · Kenali</h4><p><code>describe</code>, <code>codebook</code>, <code>summarize</code>, <code>tab</code></p></div>
+<div class="tile"><h4>3 · Deteksi masalah</h4><p>duplikat, typo kategori, nilai tak masuk akal, missing</p></div>
+<div class="tile"><h4>4 · Perbaiki</h4><p><code>duplicates drop</code>, <code>replace</code>, <code>strtrim</code>, <code>encode</code></p></div>
+<div class="tile"><h4>5 · Beri label &amp; simpan</h4><p><code>label variable</code>, <code>save</code></p></div>
+</div>
+
+<h2>Kode lengkap, baris demi baris</h2>
+<div class="code" data-t="bersih.do"><pre>* --- 1. Masukkan data ---
+import excel "Dataset.xlsx", sheet("data_raw") firstrow clear
+import delimited "data.csv", clear          // kalau CSV
+
+* --- 2. Kenali ---
+describe                     // tipe variabel, jumlah obs
+codebook, compact            // ringkasan tiap variabel
+summarize                    // mean, sd, min, max
+summarize penjualan, detail  // + persentil, skewness, kurtosis
+tabulate wilayah, missing
+
+* --- 3. Deteksi ---
+duplicates report            // baris kembar sempurna
+duplicates report id         // id kembar
+misstable summarize          // pola missing
+list id promosi if promosi &lt; 0 | promosi &gt; 60
+
+* --- 4. Perbaiki ---
+duplicates drop
+replace wilayah = strproper(strtrim(wilayah))   // " jogja" -&gt; "Jogja"
+encode wilayah, gen(wil)                         // teks -&gt; angka berlabel
+replace promosi = . if promosi &lt; 0 | promosi &gt; 60
+destring harga, replace ignore(",")              // teks angka -&gt; numerik
+
+* --- Variabel baru ---
+generate lprice   = ln(price)
+generate sqrft2   = sqrft^2
+generate besar    = (sqrft &gt; 2000) if !missing(sqrft)   // dummy 0/1
+egen rata_wil     = mean(penjualan), by(wil)
+drop sqrft2
+rename lotsize luas_tanah
+
+* --- 5. Label &amp; simpan ---
+label variable lprice "Log harga rumah"
+label define ya 0 "Tidak" 1 "Ya"
+label values besar ya
+save "data_bersih.dta", replace</pre></div>
+
+<div class="warn"><b class="t">Jebakan dummy &amp; missing</b>Di Stata, nilai missing (<code>.</code>) dianggap <b>lebih besar dari angka apa pun</b>. Jadi <code>gen besar = (sqrft &gt; 2000)</code> akan memberi 1 untuk baris yang missing. Selalu tambah <code>if !missing(sqrft)</code>.</div>
+
+<h2>Grafik eksplorasi cepat</h2>
+<div class="code" data-t="grafik.do"><pre>histogram price, normal                        // sebaran + kurva normal
+graph box price, over(colonial)                // boxplot per kelompok
+scatter price sqrft                            // hubungan dua variabel
+twoway (scatter price sqrft) (lfit price sqrft) // + garis regresi
+graph matrix price sqrft bdrms lotsize, half
+graph export "scatter.png", replace width(1600)</pre></div>
+
+<div class="quiz">
+<div class="q" data-a="1"><p>Variabel <code>wilayah</code> berisi teks. Supaya bisa dipakai sebagai dummy di regresi, langkah paling tepat?</p><div class="opts"><button>destring wilayah, replace</button><button>encode wilayah, gen(wil) lalu pakai i.wil</button><button>rename wilayah wil</button></div><div class="fb" data-why="destring hanya untuk teks yang isinya angka. encode membuat kode angka berlabel; i.wil membuat dummy otomatis."></div></div>
+<div class="q" data-a="2"><p>Hasil <code>gen mahal = (price &gt; 300)</code> pada baris dengan price missing adalah…</p><div class="opts"><button>0</button><button>missing</button><button>1</button></div><div class="fb" data-why="Missing dianggap sangat besar, sehingga kondisi price &gt; 300 bernilai benar (1)."></div></div>
+</div>
+</section>
+
+<!-- ============ M3 ============ -->
+<section class="mod" id="m3" data-g="Fondasi" data-t="Apa itu ekonometrika?">
+<span class="pill">Bab 3 · Sesi 1</span>
+<h1>Apa itu <em>ekonometrika</em>?</h1>
+<p class="lead">Ekonom sering bilang “kalau luas rumah naik, harga naik”. Ekonometrika menjawab: <b>naik berapa</b>, dan <b>seberapa yakin</b> kita.</p>
+
+<div class="story"><span class="tag">Pemanasan dari kelas</span>Tiga studi JMAP (2023) di DIY bertanya: berapa lama properti “terekspos” di pasar sebelum laku? Jawabannya berbeda: ruko, rumah tinggal, tanah kosong masing-masing punya faktor penting sendiri, bahkan jarak ke tempat ibadah ikut signifikan. Pertanyaan kritisnya: benarkah jarak itu <i>menyebabkan</i> lambat laku, atau ia mewakili hal lain yang tidak terlihat model?</div>
+
+<h2>Tiga pekerjaan ekonometrika (Wooldridge)</h2>
+<div class="grid2">
+<div class="tile"><h4>Mengestimasi</h4><p>Berapa tambahan harga per m² bangunan?</p></div>
+<div class="tile"><h4>Menguji teori</h4><p>Apakah suku bunga deposito benar memengaruhi lama jual?</p></div>
+<div class="tile"><h4>Mengevaluasi kebijakan</h4><p>Apakah insentif PPN DTP menaikkan penjualan rumah?</p></div>
+</div>
+
+<h2>Dari teori ke model</h2>
+<p>Teori ekonomi itu <b>deterministik</b>: harga = f(luas). Dunia nyata tidak serapi itu, jadi kita tambahkan <b>galat</b> <i>u</i> yang menampung semua faktor lain yang tidak kita amati.</p>
+<div class="formula">Teori: harga = f(luas) &nbsp;→&nbsp; Model: harga = β₀ + β₁·luas + u</div>
+<div class="bedah" data-f="harga|=|b0|+|b1|·|luas|+|u"><div class="bh">🔬 Bedah rumus <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Harga rumah = harga dasar + (tambahan harga per unit luas × luas) + semua faktor lain yang tidak kita ukur."></div></div>
+
+<h2>Empat struktur data</h2>
+<div class="tw"><table class="t">
+<tr><th>Jenis</th><th>Bentuk</th><th>Contoh properti</th><th>Bab terkait</th></tr>
+<tr><td><b>Cross-section</b></td><td>Banyak unit, satu waktu</td><td>88 rumah dijual tahun 2024</td><td>Bab 5–14</td></tr>
+<tr><td><b>Time series</b></td><td>Satu unit, banyak waktu</td><td>Indeks harga rumah bulanan 2010–2025</td><td>Bab 16 (ARIMA)</td></tr>
+<tr><td><b>Pooled cross-section</b></td><td>Unit berbeda tiap periode</td><td>Survei transaksi 2020 &amp; 2024, rumahnya lain</td><td>Bab 8 (dummy tahun)</td></tr>
+<tr><td><b>Panel</b></td><td>Unit sama, diamati berkali-kali</td><td>50 kabupaten × 10 tahun</td><td>Bab 17</td></tr>
+</table></div>
+
+<h2>Kausalitas &amp; <i>ceteris paribus</i></h2>
+<p><i>Ceteris paribus</i> artinya “hal lain dianggap tetap”. Korelasi antara jumlah kafe dan harga rumah tidak berarti kafe <i>menyebabkan</i> harga naik; bisa jadi lokasi strategis menarik keduanya.</p>
+<div class="key"><b class="t">Asosiasi ≠ kausalitas</b>Kita baru bisa membaca β₁ sebagai efek kausal jika faktor lain di <i>u</i> tidak berkorelasi dengan <i>x</i>. Syarat ini akan muncul terus dengan nama <b>zero conditional mean</b>: E(u|x) = 0.</div>
+
+<h2>Langkah analisis empiris</h2>
+<ol>
+<li><b>Pertanyaan</b>: apa yang ingin diketahui?</li>
+<li><b>Spesifikasi</b>: variabel apa, bentuk fungsi apa, tanda yang diharapkan.</li>
+<li><b>Data</b>: kumpulkan, bersihkan (Bab 2).</li>
+<li><b>Estimasi</b>: OLS, MLE, dll.</li>
+<li><b>Inferensi</b>: uji hipotesis, interval kepercayaan.</li>
+<li><b>Robustness</b>: uji asumsi, spesifikasi alternatif.</li>
+<li><b>Narasi</b>: tulis hasil dengan konteks ekonomi.</li>
+</ol>
+
+<div class="quiz">
+<div class="q" data-a="1"><p>Data harga 40 apartemen yang sama diamati setiap tahun 2015–2024 termasuk…</p><div class="opts"><button>Pooled cross-section</button><button>Panel</button><button>Time series</button></div><div class="fb" data-why="Unitnya sama dan diamati berulang, itu panel. Kalau apartemennya berganti tiap tahun, pooled cross-section."></div></div>
+<div class="q" data-a="0"><p>Apa isi galat <i>u</i> dalam model harga rumah?</p><div class="opts"><button>Semua faktor lain yang memengaruhi harga tapi tidak ada di model</button><button>Salah ketik saat input data</button><button>Selisih harga tertinggi dan terendah</button></div><div class="fb" data-why="u menampung faktor tak teramati (view, kualitas tetangga, selera) plus ketidakpastian murni."></div></div>
+</div>
+</section>
+<!-- ============ M4 ============ -->
+<section class="mod" id="m4" data-g="Fondasi" data-t="Statistik yang wajib ingat">
+<span class="pill">Bab 4 · Sesi 2</span>
+<h1>Statistik yang <em>wajib</em> kamu ingat</h1>
+<p class="lead">Ekonometrika berdiri di atas empat batu: rata-rata, varians, korelasi, dan uji hipotesis. Kita segarkan lagi dengan cepat.</p>
+
+<h2>Ukuran pemusatan &amp; sebaran</h2>
+<div class="tw"><table class="t">
+<tr><th>Konsep</th><th>Rumus</th><th>Bahasa manusia</th></tr>
+<tr><td>Rata-rata</td><td><code>x̄ = Σxᵢ / n</code></td><td>Titik keseimbangan data</td></tr>
+<tr><td>Varians</td><td><code>s² = Σ(xᵢ − x̄)² / (n − 1)</code></td><td>Rata-rata jarak kuadrat dari pusat</td></tr>
+<tr><td>Simpangan baku</td><td><code>s = √s²</code></td><td>Sebaran dalam satuan asli</td></tr>
+<tr><td>Kovarians</td><td><code>Σ(xᵢ−x̄)(yᵢ−ȳ)/(n−1)</code></td><td>Apakah x dan y bergerak searah?</td></tr>
+<tr><td>Korelasi</td><td><code>r = cov(x,y)/(sₓ·s_y)</code></td><td>Kovarians yang dibakukan, −1 sampai 1</td></tr>
+</table></div>
+
+<h2>Uji hipotesis dalam 4 langkah</h2>
+<ol>
+<li><b>H₀</b> (status quo, misal “tidak ada pengaruh”: β = 0) dan <b>H₁</b> (β ≠ 0).</li>
+<li>Pilih tingkat signifikansi α, biasanya 5%.</li>
+<li>Hitung statistik uji, misalnya <code>t = (estimasi − nilai H₀) / standard error</code>.</li>
+<li>Bandingkan: jika |t| &gt; t-kritis, atau <b>p-value &lt; α</b>, tolak H₀.</li>
+</ol>
+<div class="key"><b class="t">p-value, versi paling sederhana</b>“Kalau H₀ benar, seberapa aneh data seperti ini bisa muncul?” p kecil = data sangat aneh untuk dunia H₀ → kita meragukan H₀.</div>
+
+<div class="lab" id="labT">
+<div class="lt">🧪 Lab: geser t, lihat p-value <span class="pill mint">interaktif</span></div>
+<canvas id="cvT" width="820" height="300"></canvas>
+<div class="ctrls">
+<label>statistik t <input type="range" id="tSlider" min="0" max="4" step="0.01" value="2.10"></label>
+<label>df <select id="tDf"><option>5</option><option>20</option><option selected>85</option></select></label>
+<label>α <select id="tAlpha"><option value="0.10">10%</option><option value="0.05" selected>5%</option><option value="0.01">1%</option></select></label>
+</div>
+<div class="stats" id="tStats"></div>
+</div>
+
+<h2>Di Stata</h2>
+<div class="code" data-t="statistik.do"><pre>bcuse hprice1, clear
+summarize price sqrft, detail
+correlate price sqrft bdrms lotsize      // matriks korelasi
+pwcorr price sqrft bdrms, sig star(.05)  // + p-value dan bintang
+ttest price == 300                       // apakah rata-rata harga = 300?
+ttest price, by(colonial)                // beda rata-rata dua kelompok</pre></div>
+
+<div class="warn"><b class="t">Dua kesalahan klasik</b>(1) “p = 0,03 berarti peluang H₀ benar 3%.” Salah. p dihitung <i>dengan asumsi</i> H₀ benar. (2) “Tidak signifikan berarti tidak ada pengaruh.” Belum tentu, bisa jadi sampel terlalu kecil.</div>
+
+<div class="quiz">
+<div class="q" data-a="2"><p>Hasil uji: t = 1,4 dan p = 0,17 pada α = 5%. Kesimpulannya?</p><div class="opts"><button>Tolak H₀, variabel berpengaruh</button><button>Terima H₀, terbukti tidak berpengaruh</button><button>Gagal menolak H₀; belum ada bukti cukup</button></div><div class="fb" data-why="p &gt; α → gagal tolak. Kita tidak pernah “membuktikan” H₀."></div></div>
+<div class="q" data-a="0"><p>Korelasi r = −0,8 antara jarak ke pusat kota dan harga tanah artinya…</p><div class="opts"><button>Hubungan linear negatif yang kuat</button><button>Jarak menyebabkan harga turun 80%</button><button>Hubungan lemah</button></div><div class="fb" data-why="Korelasi mengukur kekuatan hubungan linear, bukan besar efek dan bukan kausalitas."></div></div>
+</div>
+</section>
+
+<!-- ============ M5 ============ -->
+<section class="mod" id="m5" data-g="Regresi linear" data-t="Regresi linear sederhana">
+<span class="pill">Bab 5 · Sesi 3</span>
+<h1>Regresi linear <em>sederhana</em></h1>
+<p class="lead">Satu y, satu x, satu garis. Tapi garis yang mana? Jawabannya: garis yang membuat total kesalahan kuadrat paling kecil.</p>
+
+<div class="story"><span class="tag">Cerita</span>Seorang penilai properti ingin rumus cepat: “setiap tambahan 1 sqft luas bangunan menambah harga berapa?” Ia punya 88 transaksi. Ia menggambar scatter plot, lalu mencari garis terbaik.</div>
+
+<h2>PRF vs SRF</h2>
+<div class="grid2">
+<div class="tile"><h4>PRF (populasi)</h4><p><code>y = β₀ + β₁x + u</code><br>Garis “sejati” yang tak pernah kita lihat. <i>u</i> = galat.</p></div>
+<div class="tile"><h4>SRF (sampel)</h4><p><code>ŷ = β̂₀ + β̂₁x</code><br>Garis hasil estimasi dari data. <i>û = y − ŷ</i> = residual.</p></div>
+</div>
+<div class="bedah" data-f="yhat|=|b0hat|+|b1hat|x"><div class="bh">🔬 Bedah rumus garis prediksi <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Harga tebakan model = harga dasar hasil estimasi + (tambahan harga per sqft hasil estimasi × luas rumah itu). Contoh: 11,20 + 0,140 × 2.000 = 291,2 ribu USD."></div></div>
+<div class="bedah" data-f="uhat|=|y|−|yhat"><div class="bh">🔬 Bedah rumus residual <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Residual = harga sebenarnya − harga tebakan. Rumah laku 320, tebakan 291,2 → û = +28,8 (model menebak terlalu rendah)."></div></div>
+<div class="bedah" data-f="y|=|b0|+|b1|x|+|u"><div class="bh">🔬 Bedah PRF <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Versi “sejati” di populasi: tanpa topi, karena β dan u tidak pernah kita ketahui persis."></div></div>
+<div class="key"><b class="t">Galat vs residual</b>Galat (<i>u</i>) tidak bisa diamati. Residual (<i>û</i>) bisa dihitung. Topi “^” = hasil estimasi.</div>
+
+<h2>Ide OLS: jumlah kuadrat residual sekecil mungkin</h2>
+<div class="formula">min Σ ûᵢ² = Σ (yᵢ − β̂₀ − β̂₁xᵢ)²</div>
+<div class="bedah" data-f="min|Σ|uhati|²|=|Σ|(|yi|−|b0hat|−|b1hat|xi|)|²"><div class="bh">🔬 Bedah rumus <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Cari pasangan β̂₀ dan β̂₁ yang membuat jumlah kuadrat semua residual paling kecil."></div></div>
+<p>Turunkan terhadap β̂₀ dan β̂₁, samakan nol, dan kamu dapat:</p>
+<div class="formula">β̂₁ = Σ(xᵢ−x̄)(yᵢ−ȳ) / Σ(xᵢ−x̄)² &nbsp;&nbsp;|&nbsp;&nbsp; β̂₀ = ȳ − β̂₁x̄</div>
+<div class="bedah" data-f="b1hat|=|Σ|(|xi|−|xbar|)|(|yi|−|ybar|)|/|Σ|(|xi|−|xbar|)|²"><div class="bh">🔬 Bedah rumus <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Pembilang: seberapa sering x dan y sama-sama di atas/bawah rata-ratanya (kovarians). Penyebut: seberapa menyebar x (varians). Hasil bagi = kemiringan garis."></div></div>
+<p>Artinya β̂₁ = kovarians(x,y) / varians(x). Garis OLS <b>selalu melewati titik rata-rata (x̄, ȳ)</b>.</p>
+
+<div class="lab" id="labOLS">
+<div class="lt">🧪 Lab: bangun garis OLS sendiri <span class="pill mint">klik kanvas untuk tambah titik</span></div>
+<canvas id="cvOLS" width="820" height="420"></canvas>
+<div class="ctrls">
+<button class="btn" id="olsOutlier">+ Tambah outlier</button>
+<button class="btn ghost" id="olsReset">Data contoh</button>
+<button class="btn ghost" id="olsClear">Kosongkan</button>
+<label><input type="checkbox" id="olsSq" checked> tampilkan residual</label>
+<label><input type="checkbox" id="olsMine"> coba garis tebakanku</label>
+<label id="mineCtl" hidden>kemiringan <input type="range" id="mineSlope" min="-1" max="2" step="0.01" value="0.5"></label>
+</div>
+<div class="stats" id="olsStats"></div>
+<p class="muted" style="font-size:14px;margin:8px 0 0">Coba: aktifkan “garis tebakanku” dan geser. SSR tebakanmu tidak akan pernah lebih kecil dari SSR OLS. Lalu tambah outlier dan lihat garisnya “tertarik”.</p>
+</div>
+
+<h2>Ukuran kecocokan: R²</h2>
+<div class="formula">SST = SSE + SSR &nbsp;&nbsp;→&nbsp;&nbsp; R² = SSE/SST = 1 − SSR/SST</div>
+<div class="bedah" data-f="R2|=|SSE|/|SST|=|1|−|SSR|/|SST"><div class="bh">🔬 Bedah rumus <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Bagian variasi y yang berhasil dijelaskan model, dari total variasi y."></div></div>
+<p>SST = total variasi y, SSE = variasi yang dijelaskan model, SSR = variasi sisa. R² = 0,63 berarti 63% variasi harga dijelaskan oleh luas bangunan.</p>
+<div class="warn"><b class="t">Hati-hati istilah</b>Wooldridge memakai SSE = <i>explained</i>, SSR = <i>residual</i>. Buku lain (Gujarati) kadang terbalik: ESS dan RSS. Cek definisinya, jangan hafal singkatannya.</div>
+
+<h2>Asumsi SLR.1–SLR.5</h2>
+<div class="tw"><table class="t">
+<tr><th>Asumsi</th><th>Isi</th><th>Kalau gagal…</th></tr>
+<tr><td>SLR.1</td><td>Linear dalam parameter</td><td>Model salah bentuk</td></tr>
+<tr><td>SLR.2</td><td>Sampel acak</td><td>Bias seleksi</td></tr>
+<tr><td>SLR.3</td><td>x bervariasi</td><td>β̂₁ tidak bisa dihitung (bagi nol)</td></tr>
+<tr><td>SLR.4</td><td>E(u|x) = 0</td><td><b>β̂ bias</b>, masalah paling serius</td></tr>
+<tr><td>SLR.5</td><td>Var(u|x) = σ² (homoskedastis)</td><td>β̂ tetap tak bias, tapi SE salah</td></tr>
+</table></div>
+
+<h2>Di Stata</h2>
+<div class="code" data-t="slr.do"><pre>bcuse hprice1, clear
+scatter price sqrft
+regress price sqrft                    // y dulu, baru x
+predict yhat, xb                        // nilai prediksi
+predict uhat, residuals                 // residual
+twoway (scatter price sqrft) (lfit price sqrft), ///
+       title("Harga vs luas bangunan")
+summarize uhat                          // rata-rata residual = 0 (selalu)</pre></div>
+
+<h3>Cara membaca koefisien</h3>
+<p>Jika output memberi <code>price = 11,20 + 0,140·sqrft</code> (price dalam ribu USD): setiap tambahan <b>1 sqft</b> berasosiasi dengan kenaikan harga <b>0,140 ribu USD = 140 USD</b>. Tambah 100 sqft → sekitar 14 ribu USD.</p>
+
+<div class="quiz">
+<div class="q" data-a="1"><p>Mengapa OLS memakai residual <b>kuadrat</b>, bukan residual biasa?</p><div class="opts"><button>Supaya angkanya lebih besar</button><button>Residual positif dan negatif akan saling menghapus kalau dijumlah biasa</button><button>Karena Stata tidak bisa menghitung nilai negatif</button></div><div class="fb" data-why="Σû selalu 0 untuk garis melalui rata-rata, jadi tidak informatif. Kuadrat membuat semua kesalahan positif dan menghukum kesalahan besar."></div></div>
+<div class="q" data-a="2"><p>Asumsi mana yang, jika gagal, membuat β̂ <b>bias</b>?</p><div class="opts"><button>SLR.5 homoskedastisitas</button><button>SLR.3 variasi x</button><button>SLR.4 zero conditional mean</button></div><div class="fb" data-why="SLR.4 menjamin ketakbiasan. SLR.5 hanya memengaruhi varians/SE."></div></div>
+</div>
+</section>
+
+<!-- ============ M6 ============ -->
+<section class="mod" id="m6" data-g="Regresi linear" data-t="Regresi berganda &amp; OLS">
+<span class="pill">Bab 6 · Sesi 4–5 &amp; 8</span>
+<h1>Regresi <em>berganda</em>: menahan hal lain tetap</h1>
+<p class="lead">Rumah besar biasanya punya lebih banyak kamar. Kalau hanya meregresi harga pada kamar, efek luas “menumpang” di koefisien kamar. Regresi berganda memisahkannya.</p>
+
+<div class="formula">y = β₀ + β₁x₁ + β₂x₂ + … + βₖxₖ + u</div>
+<div class="bedah" data-f="y|=|b0|+|b1|x1|+|b2|x2|+|…|+|bk|xk|+|u"><div class="bh">🔬 Bedah rumus <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Sama seperti regresi sederhana, tapi setiap βⱼ kini dibaca “dengan x lain dianggap tetap”."></div></div>
+<p><b>βⱼ = efek parsial</b>: perubahan y jika xⱼ naik satu unit, <i>dengan x lain tetap</i>. Inilah <i>ceteris paribus</i> versi statistik.</p>
+
+<h2>Partialling out (Frisch–Waugh)</h2>
+<p>Koefisien bdrms dalam <code>regress price sqrft bdrms</code> sama persis dengan dua langkah ini:</p>
+<ol><li>Regresikan bdrms pada sqrft, ambil residualnya (bagian bdrms yang <i>tidak</i> dijelaskan luas).</li><li>Regresikan price pada residual itu.</li></ol>
+<div class="code" data-t="partial.do"><pre>bcuse hprice1, clear
+regress price sqrft bdrms
+regress bdrms sqrft
+predict r_bdrms, residuals
+regress price r_bdrms          // koefisien = koefisien bdrms di atas!</pre></div>
+
+<h2>Omitted variable bias (OVB)</h2>
+<p>Model benar: <code>y = β₀ + β₁x₁ + β₂x₂ + u</code>. Kalau x₂ dibuang, slope sederhana menjadi:</p>
+<div class="formula">E(β̃₁) = β₁ + β₂·δ̃₁ &nbsp;&nbsp;(δ̃₁ = slope regresi x₂ pada x₁)</div>
+<div class="bedah" data-f="E|(|b1til|)|=|b1|+|b2|·|d1til"><div class="bh">🔬 Bedah rumus <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Rata-rata estimasi dari model yang “kurang variabel” = efek sebenarnya + bias. Bias = (pengaruh variabel yang terlupa) × (hubungannya dengan x₁)."></div></div>
+<div class="tw"><table class="t">
+<tr><th></th><th>corr(x₁,x₂) &gt; 0</th><th>corr(x₁,x₂) &lt; 0</th></tr>
+<tr><th>β₂ &gt; 0</th><td>bias <b>ke atas</b> (+)</td><td>bias ke bawah (−)</td></tr>
+<tr><th>β₂ &lt; 0</th><td>bias ke bawah (−)</td><td>bias <b>ke atas</b> (+)</td></tr>
+</table></div>
+<div class="story"><span class="tag">Contoh</span>Regresi <code>price</code> hanya pada <code>bdrms</code>. Luas (x₂) berpengaruh positif pada harga (β₂&gt;0) dan berkorelasi positif dengan jumlah kamar. Maka koefisien bdrms <b>terlalu besar</b> (bias ke atas). Coba jalankan <code>reg price bdrms</code> vs <code>reg price bdrms sqrft</code>, lalu bandingkan koefisien bdrms-nya.</div>
+
+<h2>Asumsi MLR &amp; Teorema Gauss–Markov</h2>
+<ul>
+<li><b>MLR.1–4</b> (linear, sampel acak, tidak ada multikolinearitas sempurna, E(u|x)=0) → OLS <b>tak bias</b>.</li>
+<li>+ <b>MLR.5</b> homoskedastis → OLS adalah <b>BLUE</b>: Best Linear Unbiased Estimator (varians terkecil di antara estimator linear tak bias).</li>
+<li>+ <b>MLR.6</b> u ~ Normal → uji t dan F berlaku persis di sampel kecil.</li>
+</ul>
+<div class="formula">Var(β̂ⱼ) = σ² / [ SSTⱼ · (1 − Rⱼ²) ]</div>
+<div class="bedah" data-f="Var|(|bjhat|)|=|s2|/|[|SSTj|·|(|1|−|Rj2|)|]"><div class="bh">🔬 Bedah rumus <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Estimasi makin tidak presisi jika galat berisik (σ² besar), x kurang bervariasi (SSTⱼ kecil), atau x mirip regresor lain (Rⱼ² besar)."></div></div>
+<p>Varians mengecil jika σ² kecil, variasi xⱼ besar (SSTⱼ), dan xⱼ tidak terlalu mirip regresor lain (Rⱼ² kecil). Rⱼ² tinggi = <b>multikolinearitas</b>.</p>
+
+<h2>Sifat aljabar (selalu benar, tanpa asumsi)</h2>
+<ul><li>Σûᵢ = 0 &nbsp;·&nbsp; Σxᵢⱼûᵢ = 0 &nbsp;·&nbsp; titik rata-rata ada di bidang regresi &nbsp;·&nbsp; R² tidak turun saat variabel ditambah.</li></ul>
+
+<h2>Di Stata</h2>
+<div class="code" data-t="mlr.do"><pre>bcuse hprice1, clear
+regress price sqrft bdrms lotsize colonial
+regress price sqrft bdrms lotsize colonial, beta   // koefisien terstandar
+estimates store m1
+regress price sqrft bdrms
+estimates store m2
+estimates table m1 m2, b(%9.3f) se stats(N r2 r2_a)   // bandingkan model
+
+* Tabel rapi untuk laporan (sekali install)
+ssc install estout, replace
+esttab m1 m2 using "tabel.rtf", se r2 ar2 star(* 0.10 ** 0.05 *** 0.01) replace</pre></div>
+
+<div class="quiz">
+<div class="q" data-a="0"><p>Dalam <code>reg price sqrft bdrms</code>, koefisien bdrms = 15. Interpretasi yang benar?</p><div class="opts"><button>Satu kamar tambahan berasosiasi dengan harga +15 ribu USD, dengan luas tetap</button><button>Rumah dengan 15 kamar paling mahal</button><button>Setiap kamar menambah luas 15 sqft</button></div><div class="fb" data-why="Efek parsial: ceteris paribus luas. Artinya membagi ruang yang sama menjadi lebih banyak kamar."></div></div>
+<div class="q" data-a="1"><p>Menambahkan variabel tak relevan ke model akan…</p><div class="opts"><button>Membuat β̂ bias</button><button>Tetap tak bias, tapi varians β̂ bisa naik</button><button>Menurunkan R²</button></div><div class="fb" data-why="Variabel tak relevan tidak menimbulkan bias, tetapi bisa memperbesar SE lewat Rⱼ². R² tidak pernah turun."></div></div>
+</div>
+</section>
+<!-- ============ M7 ============ -->
+<section class="mod" id="m7" data-g="Regresi linear" data-t="Inferensi &amp; membaca output">
+<span class="pill">Bab 7 · Sesi 4–5</span>
+<h1>Membaca output <em>regress</em> seperti detektif</h1>
+<p class="lead">Klik bagian berwarna pada output di bawah. Setiap angka punya cerita.</p>
+
+<div class="lab">
+<div class="lt">🔍 Output interaktif: <code style="font-size:15px">regress price sqrft bdrms</code></div>
+<div class="out" id="regOut">      Source |       SS           df       MS      Number of obs   =  <span class="hl" data-k="n">      88</span>
+-------------+----------------------------------   F(2, 85)        =  <span class="hl" data-k="F">   72.96</span>
+       Model | <span class="hl" data-k="sse"> 580009.152</span>         2  290004.576   Prob &gt; F        =  <span class="hl" data-k="pF">  0.0000</span>
+    Residual | <span class="hl" data-k="ssr"> 337845.354</span>        85  3974.65122   R-squared       =  <span class="hl" data-k="r2">  0.6319</span>
+-------------+----------------------------------   Adj R-squared   =  <span class="hl" data-k="ar2">  0.6233</span>
+       Total | <span class="hl" data-k="sst"> 917854.506</span>        87  10550.0518   Root MSE        =  <span class="hl" data-k="rmse">  63.045</span>
+
+------------------------------------------------------------------------------
+       price | <span class="hl" data-k="coef">Coefficient</span>  <span class="hl" data-k="se">Std. err.</span>      <span class="hl" data-k="t">t</span>    <span class="hl" data-k="p">P&gt;|t|</span>     <span class="hl" data-k="ci">[95% conf. interval]</span>
+-------------+----------------------------------------------------------------
+       sqrft |   <span class="hl" data-k="b1">.1284362</span>   .0138245     9.29   0.000     .1009495    .1559229
+       bdrms |   <span class="hl" data-k="b2">15.19819</span>   9.483517     1.60   <span class="hl" data-k="p2">0.113</span>    -3.657582    34.05396
+       _cons |   <span class="hl" data-k="b0">-19.315</span>    31.04662    -0.62   0.536    -81.04399     42.414
+------------------------------------------------------------------------------</div>
+<div class="explain" id="regExplain">👆 Klik salah satu angka atau judul kolom yang disorot.</div>
+<p class="muted" style="font-size:13px;margin:8px 0 0">Angka mengikuti contoh Wooldridge (hprice1) dan dibulatkan; output di komputermu bisa sedikit berbeda di digit akhir.</p>
+</div>
+
+<h2>Rumus-rumus di balik layar</h2>
+<div class="bedah" data-f="t|=|(|bjhat|−|0|)|/|se|(|bjhat|)"><div class="bh">🔬 Bedah rumus <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Berapa kali lipat standard error jarak estimasi dari nol? Makin jauh, makin yakin koefisien ≠ 0."></div></div>
+<div class="bedah" data-f="CI|=|bjhat|±|tc|·|se|(|bjhat|)"><div class="bh">🔬 Bedah interval kepercayaan <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Rentang nilai β yang masuk akal: estimasi ± (angka kritis × ketidakpastian)."></div></div>
+<div class="tw"><table class="t">
+<tr><th>Alat</th><th>Rumus</th><th>Pakai untuk</th></tr>
+<tr><td>Uji t</td><td><code>t = (β̂ⱼ − 0) / se(β̂ⱼ)</code>, df = n − k − 1</td><td>Satu koefisien</td></tr>
+<tr><td>Interval kepercayaan</td><td><code>β̂ⱼ ± t<sub>c</sub> · se(β̂ⱼ)</code></td><td>Rentang nilai masuk akal</td></tr>
+<tr><td>Uji F</td><td><code>F = [(SSR<sub>r</sub>−SSR<sub>ur</sub>)/q] / [SSR<sub>ur</sub>/(n−k−1)]</code></td><td>Beberapa koefisien sekaligus</td></tr>
+<tr><td>Adjusted R²</td><td><code>1 − (1−R²)(n−1)/(n−k−1)</code></td><td>Membandingkan model beda jumlah variabel</td></tr>
+</table></div>
+
+<h2>Uji hipotesis lanjutan di Stata</h2>
+<div class="code" data-t="inferensi.do"><pre>bcuse hprice1, clear
+regress price sqrft bdrms lotsize
+
+test bdrms                     // H0: b_bdrms = 0
+test bdrms lotsize             // H0: keduanya = 0 (uji F bersama)
+test sqrft = 0.1               // H0: koefisien = 0.1
+test 100*sqrft = bdrms         // H0: 100 sqft setara 1 kamar
+lincom 100*sqrft - bdrms       // estimasi + SE dari kombinasi linear
+display invttail(84, 0.025)    // t kritis dua sisi 5%, df = 84
+regress price sqrft bdrms lotsize, level(90)   // CI 90%</pre></div>
+
+<div class="tip"><b class="t">Uji satu sisi dari output dua sisi</b>Jika H₁: β &gt; 0 dan koefisien positif, p satu sisi = p dua sisi / 2. Untuk bdrms: 0,113/2 ≈ 0,057, signifikan di 10% tapi belum di 5%.</div>
+
+<h2>Signifikansi statistik vs ekonomi</h2>
+<p>Koefisien bisa signifikan tapi kecil sekali artinya, atau besar tapi tidak presisi. Dalam laporan, selalu bahas <b>besaran</b> (misalnya “+100 sqft ≈ +12,8 ribu USD”), bukan hanya bintang.</p>
+
+<div class="quiz">
+<div class="q" data-a="1"><p>Pada output di atas, CI 95% untuk bdrms [−3,66 ; 34,05] memuat 0. Artinya…</p><div class="opts"><button>bdrms signifikan di 5%</button><button>bdrms tidak signifikan di 5% (konsisten dengan p = 0,113)</button><button>Koefisien pasti bernilai 0</button></div><div class="fb" data-why="CI 95% memuat 0 ⇔ gagal tolak H₀ di 5% (uji dua sisi)."></div></div>
+<div class="q" data-a="2"><p>Kamu ingin menguji apakah <code>bdrms</code> dan <code>lotsize</code> <i>bersama-sama</i> tidak berpengaruh. Perintahnya?</p><div class="opts"><button>Lihat p-value keduanya satu per satu</button><button>correlate bdrms lotsize</button><button>test bdrms lotsize</button></div><div class="fb" data-why="Hipotesis gabungan memerlukan uji F, bukan dua uji t terpisah."></div></div>
+</div>
+</section>
+
+<!-- ============ M8 ============ -->
+<section class="mod" id="m8" data-g="Regresi linear" data-t="Log, elastisitas &amp; dummy">
+<span class="pill">Bab 8 · Sesi 6</span>
+<h1>Log, elastisitas &amp; <em>dummy</em></h1>
+<p class="lead">“Linear” artinya linear dalam <b>parameter</b>, bukan dalam variabel. Jadi kita bebas memakai ln, kuadrat, dan dummy, asalkan membacanya dengan benar.</p>
+
+<h2>Tabel sakti interpretasi log</h2>
+<div class="bedah" data-f="ln|y|=|b0|+|b1|ln|x|+|u"><div class="bh">🔬 Bedah model log–log <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Karena kedua sisi dalam log, β₁ membaca perubahan persen ke persen: elastisitas."></div></div>
+<div class="tw"><table class="t">
+<tr><th>Model</th><th>y</th><th>x</th><th>Arti β₁</th></tr>
+<tr><td>Level–level</td><td>y</td><td>x</td><td>x +1 unit → y + β₁ unit</td></tr>
+<tr><td>Log–level (log-lin)</td><td>ln y</td><td>x</td><td>x +1 unit → y + (100·β₁)%</td></tr>
+<tr><td>Level–log (lin-log)</td><td>y</td><td>ln x</td><td>x +1% → y + (β₁/100) unit</td></tr>
+<tr><td>Log–log</td><td>ln y</td><td>ln x</td><td>x +1% → y + β₁% (<b>elastisitas</b>)</td></tr>
+</table></div>
+
+<div class="lab">
+<div class="lt">🧮 Lab: penerjemah koefisien <span class="pill mint">isi &amp; baca</span></div>
+<div class="ctrls">
+<label>Bentuk <select id="ffType"><option value="ll">Level–level</option><option value="lg">Log–level</option><option value="gl">Level–log</option><option value="gg" selected>Log–log</option><option value="dm">Log–level, x dummy</option></select></label>
+<label>β̂ <input type="number" id="ffB" value="0.70" step="0.01" style="width:90px"></label>
+<label>y <input id="ffY" value="harga rumah" style="width:130px" class="search" ></label>
+<label>x <input id="ffX" value="luas bangunan" style="width:130px" class="search"></label>
+</div>
+<div class="explain" id="ffOut"></div>
+</div>
+
+<div class="warn"><b class="t">Koreksi untuk koefisien besar &amp; dummy</b>Pendekatan 100·β akurat hanya jika β kecil (&lt; 0,1). Rumus persis pada model log–level: <code>%Δy = 100·(e<sup>β</sup> − 1)</code>. Contoh β = 0,25 → bukan 25% tapi 28,4%.</div>
+
+<h2>Kuadrat &amp; titik balik</h2>
+<div class="formula">y = β₀ + β₁x + β₂x² + u &nbsp;→&nbsp; Δy/Δx = β₁ + 2β₂x &nbsp;·&nbsp; titik balik x* = −β₁ / (2β₂)</div>
+<p>Contoh: harga terhadap umur bangunan bisa turun lalu naik lagi (bangunan “heritage”).</p>
+
+<h2>Variabel dummy</h2>
+<ul>
+<li>Dummy = 0/1. Koefisiennya = <b>selisih rata-rata</b> y antara kelompok 1 dan kelompok dasar, ceteris paribus.</li>
+<li>Untuk kategori dengan g kelompok, masukkan <b>g − 1</b> dummy. Memasukkan semua = <b>dummy variable trap</b> (multikolinearitas sempurna).</li>
+<li><b>Interaksi</b> <code>dummy × x</code> membuat kemiringan berbeda antar kelompok.</li>
+</ul>
+
+<div class="code" data-t="bentuk_fungsi.do"><pre>bcuse hprice1, clear
+* Log-log: elastisitas harga terhadap luas
+regress lprice lsqrft llotsize bdrms
+* Log-level dengan dummy
+regress lprice sqrft colonial
+display 100*(exp(_b[colonial]) - 1)      // % beda harga persis
+
+* Faktor-variabel Stata: tidak perlu generate manual!
+regress price c.sqrft##c.sqrft bdrms      // kuadrat
+margins, dydx(sqrft) at(sqrft=(1500 2500 3500))
+regress lprice i.colonial##c.sqrft        // interaksi dummy x kontinu
+regress price sqrft i.bdrms               // dummy tiap jumlah kamar (basis = terkecil)
+regress price sqrft ib3.bdrms             // ganti basis ke 3 kamar
+
+* Uji Chow sederhana: apakah koefisien beda antar kelompok?
+regress lprice i.colonial##(c.lsqrft c.llotsize)
+testparm i.colonial#c.lsqrft i.colonial#c.llotsize</pre></div>
+
+<div class="tip"><b class="t">Satuan &amp; skala</b>Mengubah harga dari ribu USD ke USD (×1000) mengalikan semua koefisien dan SE dengan 1000; t, p, dan R² tidak berubah. Pada model log, mengubah satuan hanya menggeser intersep.</div>
+
+<div class="quiz">
+<div class="q" data-a="0"><p><code>ln(harga) = … + 0,05·jumlah_kamar</code>. Artinya?</p><div class="opts"><button>Tambah 1 kamar → harga naik sekitar 5%</button><button>Tambah 1% kamar → harga naik 0,05%</button><button>Tambah 1 kamar → harga naik 0,05 unit</button></div><div class="fb" data-why="Log–level: 100·β % per unit x."></div></div>
+<div class="q" data-a="2"><p>Data punya 3 wilayah (Sleman, Bantul, Kota). Berapa dummy yang dimasukkan bersama konstanta?</p><div class="opts"><button>3</button><button>1</button><button>2</button></div><div class="fb" data-why="g − 1 = 2; wilayah yang tidak dimasukkan menjadi kelompok pembanding."></div></div>
+</div>
+</section>
+
+<!-- ============ M9 ============ -->
+<section class="mod" id="m9" data-g="Regresi linear" data-t="Uji asumsi &amp; diagnostik">
+<span class="pill">Bab 9 · Sesi 9</span>
+<h1>Uji asumsi: <em>cek kesehatan</em> model</h1>
+<p class="lead">Model sudah jalan? Sekarang periksa apakah ia sehat. Tiap penyakit punya gejala, alat tes, dan obat.</p>
+
+<div class="tw"><table class="t">
+<tr><th>Penyakit</th><th>Gejala / akibat</th><th>Tes di Stata</th><th>Obat</th></tr>
+<tr><td><b>Heteroskedastisitas</b></td><td>Varians galat tidak konstan; β̂ tetap tak bias tapi SE salah</td><td><code>estat hettest</code> (Breusch–Pagan)<br><code>estat imtest, white</code></td><td><code>, vce(robust)</code>; transformasi log; WLS</td></tr>
+<tr><td><b>Multikolinearitas</b></td><td>SE besar, tanda aneh, R² tinggi tapi t kecil</td><td><code>estat vif</code> (VIF &gt; 10 waspada)</td><td>Tambah data, gabung/buang variabel yang redundan</td></tr>
+<tr><td><b>Salah spesifikasi</b></td><td>Bentuk fungsi keliru / variabel terlupa</td><td><code>estat ovtest</code> (Ramsey RESET)<br><code>linktest</code></td><td>Tambah log/kuadrat/interaksi, variabel relevan</td></tr>
+<tr><td><b>Non-normalitas</b></td><td>Uji t/F kurang tepat di sampel kecil</td><td><code>sktest uhat</code>, <code>swilk uhat</code></td><td>Sampel besar → aman (CLT); transformasi</td></tr>
+<tr><td><b>Autokorelasi</b> (time series)</td><td>Galat saling berkorelasi; SE salah</td><td><code>estat dwatson</code>, <code>estat bgodfrey</code></td><td><code>newey</code>, <code>prais</code>, tambah lag</td></tr>
+<tr><td><b>Outlier/pengaruh</b></td><td>Satu titik menarik garis</td><td><code>predict cook, cooksd</code>, <code>lvr2plot</code></td><td>Cek kesalahan data; robust regression</td></tr>
+</table></div>
+
+<h2>Paket diagnostik lengkap</h2>
+<div class="code" data-t="diagnostik.do"><pre>bcuse hprice1, clear
+regress price lotsize sqrft bdrms
+
+* 1. Heteroskedastisitas
+rvfplot, yline(0)                 // pola corong = curiga
+estat hettest                     // H0: homoskedastis
+estat imtest, white
+
+* 2. Multikolinearitas
+estat vif
+
+* 3. Spesifikasi
+estat ovtest                      // H0: tidak ada variabel/bentuk terlupa
+
+* 4. Normalitas residual
+predict uhat, residuals
+histogram uhat, normal
+qnorm uhat
+swilk uhat                        // H0: normal
+
+* 5. Pengaruh observasi
+predict cook, cooksd
+list price sqrft cook if cook &gt; 4/e(N)
+
+* Obat heteroskedastisitas
+regress price lotsize sqrft bdrms, vce(robust)
+regress lprice llotsize lsqrft bdrms     // versi log sering lebih "sehat"
+estat hettest</pre></div>
+
+<div class="story"><span class="tag">Contoh Wooldridge 8.4</span>Pada model harga level, uji Breusch–Pagan menolak homoskedastisitas (p ≈ 0,002). Setelah semua variabel diubah ke log, p naik menjadi ≈ 0,24, sehingga heteroskedastisitas tidak lagi terdeteksi. Transformasi log sering “menenangkan” data harga.</div>
+
+<div class="key"><b class="t">Cara menulis di laporan</b>“Uji Breusch–Pagan menghasilkan χ²(3) = … (p = …), sehingga H₀ homoskedastisitas ditolak pada α = 5%. Oleh karena itu, inferensi menggunakan standard error robust terhadap heteroskedastisitas.”</div>
+
+<div class="quiz">
+<div class="q" data-a="1"><p>Hasil <code>estat hettest</code>: p = 0,001. Tindakan paling umum?</p><div class="opts"><button>Hapus variabel dengan p terbesar</button><button>Estimasi ulang dengan vce(robust)</button><button>Tidak perlu apa-apa karena β̂ tetap tak bias</button></div><div class="fb" data-why="β̂ memang tetap tak bias, tetapi SE biasa salah, sehingga uji t menyesatkan. Robust SE memperbaikinya."></div></div>
+<div class="q" data-a="0"><p>VIF lotsize = 1,04, sqrft = 1,83. Kesimpulan?</p><div class="opts"><button>Tidak ada masalah multikolinearitas serius</button><button>Multikolinearitas parah</button><button>Model heteroskedastis</button></div><div class="fb" data-why="VIF mendekati 1 berarti regresor hampir tidak saling menjelaskan. Batas kasar yang sering dipakai: 10."></div></div>
+</div>
+</section>
+<!-- ============ M10 ============ -->
+<section class="mod" id="m10" data-g="Model lanjutan" data-t="Maximum likelihood">
+<span class="pill lav">Bab 10 · Sesi 10</span>
+<h1>Maximum likelihood: <em>parameter mana</em> yang paling mungkin?</h1>
+<p class="lead">OLS bertanya “garis mana yang galatnya terkecil?”. MLE bertanya “nilai parameter mana yang membuat data yang kita lihat paling mungkin terjadi?”.</p>
+
+<div class="story"><span class="tag">Cerita koin</span>Dari 10 lemparan koin keluar 7 angka. Kalau p(angka) = 0,5, peluang hasil ini 0,117. Kalau p = 0,7, peluangnya 0,267, lebih besar. MLE memilih p yang membuat peluang itu <b>maksimum</b>, ternyata tepat 7/10 = 0,7.</div>
+
+<div class="lab">
+<div class="lt">🧪 Lab: mendaki bukit likelihood <span class="pill mint">geser p</span></div>
+<canvas id="cvMLE" width="820" height="280"></canvas>
+<div class="ctrls">
+<label>jumlah “sukses” <input type="range" id="mleK" min="0" max="20" value="7"></label>
+<label>dari n = 20</label>
+<label>tebakan p <input type="range" id="mleP" min="0.01" max="0.99" step="0.01" value="0.5"></label>
+</div>
+<div class="stats" id="mleStats"></div>
+</div>
+
+<h2>Langkah umum</h2>
+<ol>
+<li>Tentukan distribusi y (Bernoulli, Poisson, Normal, …).</li>
+<li>Tulis <b>likelihood</b>: L(θ) = Π f(yᵢ | xᵢ, θ).</li>
+<li>Ambil log agar perkalian menjadi penjumlahan: ℓ(θ) = Σ ln f(yᵢ | xᵢ, θ).</li>
+<li>Cari θ yang memaksimumkan ℓ. Stata melakukannya secara iteratif (“Iteration 0, 1, 2 …”).</li>
+</ol>
+<div class="formula">θ̂<sub>MLE</sub> = arg max Σ ln f(yᵢ | xᵢ; θ)</div>
+<div class="bedah" data-f="thhat|=|argmax|Σ|ln|f|(|yi|given|xi|;|th|)"><div class="bh">🔬 Bedah rumus <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Pilih parameter yang membuat total log-peluang data teramati paling besar."></div></div>
+
+<h2>Sifat &amp; alat uji</h2>
+<ul>
+<li>Pada sampel besar MLE <b>konsisten, normal asimtotik, dan efisien</b>.</li>
+<li>Pada regresi linear dengan galat normal, MLE untuk β = OLS.</li>
+<li>Tiga uji klasik: <b>Wald</b> (<code>test</code>), <b>Likelihood Ratio</b> (<code>lrtest</code>), <b>LM/score</b>.</li>
+<li>Kecocokan: log likelihood, <b>pseudo R²</b>, AIC/BIC (<code>estat ic</code>, makin kecil makin baik).</li>
+</ul>
+<div class="formula">LR = 2 (ℓ<sub>ur</sub> − ℓ<sub>r</sub>) ~ χ²<sub>q</sub></div>
+
+<div class="code" data-t="mle.do"><pre>bcuse mroz, clear
+logit inlf nwifeinc educ exper age kidslt6
+estimates store full
+logit inlf nwifeinc educ exper
+estimates store restr
+lrtest full restr                 // H0: age &amp; kidslt6 tidak perlu
+estat ic                          // AIC &amp; BIC</pre></div>
+
+<div class="quiz">
+<div class="q" data-a="1"><p>Mengapa kita memaksimumkan <b>log</b> likelihood, bukan likelihood langsung?</p><div class="opts"><button>Hasilnya berbeda dan lebih akurat</button><button>Lebih mudah dihitung (jumlah, bukan perkalian) dan titik maksimumnya sama</button><button>Karena likelihood selalu negatif</button></div><div class="fb" data-why="ln fungsi naik monoton, jadi argmax-nya sama, sementara perkalian ribuan peluang kecil menjadi penjumlahan yang stabil."></div></div>
+</div>
+</section>
+
+<!-- ============ M11 ============ -->
+<section class="mod" id="m11" data-g="Model lanjutan" data-t="Logit, probit &amp; tobit">
+<span class="pill lav">Bab 11 · Sesi 11</span>
+<h1>Kalau y hanya <em>ya atau tidak</em>: logit &amp; probit</h1>
+<p class="lead">Laku dalam 6 bulan atau tidak? Mengambil KPR atau tidak? Variabel dependen biner butuh model yang peluangnya tetap di antara 0 dan 1.</p>
+
+<h2>Masalah Linear Probability Model (LPM)</h2>
+<p><code>regress laku x</code> boleh saja dan mudah dibaca, tapi prediksinya bisa &lt; 0 atau &gt; 1 dan pasti heteroskedastis. Solusinya: bungkus indeks linear dengan fungsi berbentuk S.</p>
+<div class="formula">P(y=1|x) = G(β₀ + β₁x₁ + …) &nbsp;·&nbsp; Logit: G(z)=eᶻ/(1+eᶻ) &nbsp;·&nbsp; Probit: G(z)=Φ(z)</div>
+<div class="bedah" data-f="P|(|y1|given|x|)|=|G|(|b0|+|b1|x1|+|…|)"><div class="bh">🔬 Bedah rumus <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Hitung indeks linear seperti OLS, lalu “tekuk” dengan fungsi G agar hasilnya selalu peluang antara 0 dan 1."></div></div>
+
+<div class="lab">
+<div class="lt">🧪 Lab: kurva S peluang rumah laku <span class="pill mint">geser β</span></div>
+<canvas id="cvLogit" width="820" height="320"></canvas>
+<div class="ctrls">
+<label>β₀ <input type="range" id="lgB0" min="-8" max="4" step="0.1" value="-3"></label>
+<label>β₁ (per diskon %) <input type="range" id="lgB1" min="-0.5" max="1" step="0.01" value="0.35"></label>
+<label>diskon x <input type="range" id="lgX" min="0" max="20" step="0.5" value="8"></label>
+<label><input type="checkbox" id="lgLPM"> bandingkan LPM</label>
+</div>
+<div class="stats" id="lgStats"></div>
+</div>
+
+<h2>Membaca hasil: pakai efek marginal!</h2>
+<p>Koefisien logit/probit hanya jelas <b>tandanya</b>. Besarnya dibaca melalui efek marginal: <code>∂P/∂x = g(xβ)·β</code>, yang berbeda di setiap titik x (lihat garis singgung di lab).</p>
+<ul>
+<li><b>Odds ratio</b> (logit): e<sup>β</sup>. OR = 1,4 → odds laku naik 40% per unit x.</li>
+<li>Aturan kasar: β<sub>logit</sub> ≈ 1,6 × β<sub>probit</sub>. Efek marginal keduanya biasanya mirip.</li>
+</ul>
+
+<div class="code" data-t="biner.do"><pre>bcuse mroz, clear       // inlf = 1 jika perempuan bekerja
+regress inlf nwifeinc educ exper expersq age kidslt6 kidsge6, robust   // LPM
+logit  inlf nwifeinc educ exper expersq age kidslt6 kidsge6
+logit  inlf nwifeinc educ exper expersq age kidslt6 kidsge6, or        // odds ratio
+margins, dydx(*)                     // AME: average marginal effect
+probit inlf nwifeinc educ exper expersq age kidslt6 kidsge6
+margins, dydx(educ) atmeans          // MEM: di rata-rata
+margins, at(educ=(8 12 16))          // peluang prediksi di beberapa nilai
+estat classification                 // % prediksi benar (setelah logit)
+predict phat, pr</pre></div>
+
+<h2>Tobit: y tersensor di nol</h2>
+<p>Jam kerja per tahun banyak bernilai 0 lalu positif kontinu. OLS bias; Tobit menggabungkan “apakah positif” dan “seberapa besar”.</p>
+<div class="code" data-t="tobit.do"><pre>bcuse mroz, clear
+tobit hours nwifeinc educ exper expersq age kidslt6 kidsge6, ll(0)
+margins, dydx(educ) predict(ystar(0,.))   // efek pada E(y) tak bersyarat</pre></div>
+
+<div class="quiz">
+<div class="q" data-a="2"><p>Logit memberi β(educ) = 0,22. Pernyataan yang tepat?</p><div class="opts"><button>Tambah 1 tahun sekolah → peluang bekerja naik 22 poin persen</button><button>Tambah 1 tahun sekolah → peluang naik 0,22%</button><button>Tandanya positif; besar efek pada peluang dilihat via margins</button></div><div class="fb" data-why="Koefisien logit berada di skala log-odds. e^0,22 ≈ 1,25 (odds +25%). Efek pada peluang: margins, dydx(educ)."></div></div>
+</div>
+</section>
+
+<!-- ============ M12 ============ -->
+<section class="mod" id="m12" data-g="Model lanjutan" data-t="Multinomial &amp; ordered">
+<span class="pill lav">Bab 12 · Sesi 12</span>
+<h1>Pilihan lebih dari dua: <em>multinomial &amp; ordered</em></h1>
+<p class="lead">Membeli rumah tapak, apartemen, atau menyewa? Itu tidak berurutan. Menilai kondisi bangunan “buruk / sedang / baik”? Itu berurutan. Beda sifat, beda model.</p>
+
+<div class="grid2">
+<div class="tile"><h4>Multinomial logit (<code>mlogit</code>)</h4><p>Kategori <b>tanpa urutan</b>. Satu kategori menjadi basis; ada satu set β untuk setiap kategori lain. Asumsi IIA (tidak bergantung alternatif lain).</p></div>
+<div class="tile"><h4>Ordered logit/probit (<code>ologit</code>)</h4><p>Kategori <b>berurutan</b>. Satu set β + beberapa <i>cut-point</i> (ambang) yang memisahkan kategori.</p></div>
+</div>
+
+<div class="formula">mlogit: P(y=j) = exp(xβⱼ) / Σₕ exp(xβₕ) &nbsp;·&nbsp; ologit: y = j jika κⱼ₋₁ &lt; xβ + e ≤ κⱼ</div>
+
+<div class="code" data-t="multi_ordered.do"><pre>* --- Multinomial: jenis asuransi (Indemnity, Prepaid, Uninsure)
+webuse sysdsn1, clear
+mlogit insure age male nonwhite i.site, baseoutcome(1)
+mlogit, rrr                               // relative risk ratio
+margins, dydx(age) predict(outcome(2))    // efek pada P(Prepaid)
+
+* --- Ordered: catatan reparasi mobil 1-5
+webuse fullauto, clear
+ologit rep77 foreign length mpg
+margins, dydx(foreign) predict(outcome(5))  // efek pada P(sangat baik)
+oprobit rep77 foreign length mpg
+brant                                        // uji parallel lines (butuh paket SPost13)</pre></div>
+
+<div class="warn"><b class="t">Membaca koefisien ologit</b>β positif artinya kecenderungan ke kategori <b>lebih tinggi</b>. Peluang kategori tertinggi naik, peluang terendah turun, sementara kategori tengah bisa naik atau turun. Karena itu gunakan <code>margins</code> per outcome.</div>
+
+<div class="quiz">
+<div class="q" data-a="0"><p>Tingkat kepuasan penghuni (1 = sangat tidak puas … 5 = sangat puas) paling cocok dengan…</p><div class="opts"><button>ologit / oprobit</button><button>mlogit</button><button>poisson</button></div><div class="fb" data-why="Kategori berurutan → ordered model. mlogit membuang informasi urutan."></div></div>
+</div>
+</section>
+
+<!-- ============ M13 ============ -->
+<section class="mod" id="m13" data-g="Model lanjutan" data-t="Poisson &amp; Heckman">
+<span class="pill lav">Bab 13 · Sesi 13</span>
+<h1>Data hitungan &amp; <em>bias seleksi</em></h1>
+
+<h2>Poisson: y = 0, 1, 2, 3, …</h2>
+<p>Jumlah penawaran yang diterima sebuah listing, jumlah transaksi per kecamatan, jumlah penangkapan. Nilai tidak negatif dan bulat.</p>
+<div class="formula">E(y|x) = exp(β₀ + β₁x₁ + …) &nbsp;→&nbsp; x +1 unit ⇒ E(y) berubah ≈ 100·β % (persis: 100·(e<sup>β</sup>−1)%)</div>
+<ul>
+<li>Asumsi Poisson: mean = varians (<b>equidispersion</b>). Jika varians ≫ mean (<i>overdispersion</i>), pakai <code>nbreg</code> atau minimal robust SE.</li>
+<li>Banyak nol berlebih → pertimbangkan <code>zip</code>/<code>zinb</code>.</li>
+</ul>
+<div class="code" data-t="count.do"><pre>bcuse crime1, clear     // narr86 = jumlah penangkapan 1986
+summarize narr86, detail   // bandingkan mean dan varians
+poisson narr86 pcnv avgsen tottime ptime86 qemp86 inc86 black hispan born60, vce(robust)
+poisson, irr               // incidence rate ratio = e^b
+estat gof                  // goodness of fit (tanpa robust)
+nbreg narr86 pcnv avgsen tottime ptime86 qemp86 inc86 black hispan born60
+margins, dydx(pcnv)</pre></div>
+
+<h2>Heckman: sampel tidak acak</h2>
+<div class="story"><span class="tag">Cerita</span>Kamu ingin menaksir faktor harga sewa, tetapi hanya rumah yang <b>benar-benar disewakan</b> yang punya data sewa. Pemilik yang menilai rumahnya “terlalu berharga untuk disewakan” tidak masuk sampel. OLS pada sampel tersisa bisa bias.</div>
+<p>Heckman dua tahap: (1) probit persamaan seleksi (apakah diamati?), menghasilkan <b>inverse Mills ratio</b> λ; (2) regresi persamaan utama dengan λ sebagai regresor tambahan. Jika koefisien λ signifikan, bias seleksi memang ada.</p>
+<div class="key"><b class="t">Syarat penting</b>Persamaan seleksi sebaiknya punya minimal satu variabel yang <b>tidak</b> ada di persamaan utama (<i>exclusion restriction</i>), misalnya jumlah anak kecil memengaruhi keputusan bekerja tetapi tidak upah.</div>
+<div class="code" data-t="heckman.do"><pre>bcuse mroz, clear
+* Upah (lwage) hanya teramati untuk perempuan yang bekerja (inlf==1)
+heckman lwage educ exper expersq, ///
+        select(inlf = educ exper expersq nwifeinc age kidslt6 kidsge6) twostep
+* baris "lambda" = koefisien inverse Mills ratio
+heckman lwage educ exper expersq, ///
+        select(inlf = educ exper expersq nwifeinc age kidslt6 kidsge6)   // versi MLE</pre></div>
+
+<div class="quiz">
+<div class="q" data-a="1"><p>Mean jumlah kunjungan = 2,1 dan varians = 9,8. Model yang lebih tepat?</p><div class="opts"><button>Poisson biasa tanpa penyesuaian</button><button>Negative binomial (atau Poisson dengan robust SE)</button><button>Logit</button></div><div class="fb" data-why="Varians jauh melebihi mean = overdispersion."></div></div>
+</div>
+</section>
+
+<!-- ============ M14 ============ -->
+<section class="mod" id="m14" data-g="Model lanjutan" data-t="Model durasi">
+<span class="pill lav">Bab 14 · Sesi 14</span>
+<h1>Model durasi: <em>berapa lama</em> sampai laku?</h1>
+<p class="lead">Kembali ke pemanasan Sesi 1: waktu ekspos properti. Kita ingin tahu <b>berapa lama</b> sampai sebuah kejadian (laku terjual), padahal sebagian listing belum laku saat data dikumpulkan.</p>
+
+<h2>Kosakata inti</h2>
+<div class="tw"><table class="t">
+<tr><th>Istilah</th><th>Arti</th></tr>
+<tr><td><b>Sensor (kanan)</b></td><td>Listing belum laku saat observasi berakhir; kita hanya tahu durasinya <i>minimal</i> sekian.</td></tr>
+<tr><td><b>Survival S(t)</b></td><td>Peluang properti <b>belum</b> laku sampai waktu t.</td></tr>
+<tr><td><b>Hazard h(t)</b></td><td>“Laju laku” sesaat di waktu t, bersyarat belum laku sebelumnya.</td></tr>
+<tr><td><b>Kaplan–Meier</b></td><td>Estimasi nonparametrik kurva S(t), bertangga.</td></tr>
+<tr><td><b>Cox PH</b></td><td>h(t|x) = h₀(t)·exp(xβ). Hazard ratio e<sup>β</sup> &gt; 1 → lebih cepat laku.</td></tr>
+</table></div>
+
+<div class="lab">
+<div class="lt">🧪 Lab: kurva Kaplan–Meier dua jenis properti <span class="pill mint">ubah hazard</span></div>
+<canvas id="cvKM" width="820" height="300"></canvas>
+<div class="ctrls">
+<label>laju laku Rumah <input type="range" id="kmA" min="0.03" max="0.3" step="0.01" value="0.12"></label>
+<label>laju laku Ruko <input type="range" id="kmB" min="0.03" max="0.3" step="0.01" value="0.07"></label>
+<button class="btn ghost" id="kmNew">Sampel baru</button>
+</div>
+<div class="stats" id="kmStats"></div>
+</div>
+
+<div class="bedah" data-f="ht|=|h0t|·|exp|(|xb|)"><div class="bh">🔬 Bedah model Cox <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Laju laku seseorang = laju dasar pada waktu t × pengali yang bergantung pada karakteristiknya."></div></div>
+<div class="code" data-t="durasi.do"><pre>sysuse cancer, clear      // studytime = bulan, died = 1 jika event, drug = kelompok
+stset studytime, failure(died)      // WAJIB: deklarasikan data survival
+stdescribe
+sts graph, by(drug)                 // kurva Kaplan-Meier
+sts test drug                       // log-rank test: H0 kurva sama
+stcox i.drug age                    // hazard ratio
+stcox i.drug age, nohr              // koefisien (log hazard)
+estat phtest, detail                // uji asumsi proportional hazards
+streg i.drug age, distribution(weibull)   // model parametrik
+
+* Versi properti: 
+* stset lama_bulan, failure(laku)
+* stcox ln_harga diskon luas_bangunan dalam_kota</pre></div>
+
+<div class="quiz">
+<div class="q" data-a="0"><p>Cox model: hazard ratio diskon = 1,08. Artinya?</p><div class="opts"><button>Tiap tambahan 1% diskon, laju laku naik 8% (lebih cepat laku)</button><button>Diskon memperpanjang waktu jual 8 bulan</button><button>8% properti tidak laku</button></div><div class="fb" data-why="HR &gt; 1 = hazard (laju kejadian) lebih tinggi → durasi cenderung lebih pendek."></div></div>
+</div>
+</section>
+<!-- ============ M15 ============ -->
+<section class="mod" id="m15" data-g="Praktik" data-t="Dari do-file ke laporan">
+<span class="pill mint">Bab 15 · Sesi 7 Workshop</span>
+<h1>Dari do-file ke <em>laporan riset</em></h1>
+<p class="lead">Laporan riset bernilai 40% nilai akhir. Nilai A datang dari metode yang tepat, topik relevan, struktur rapi, dan narasi yang masuk akal. Ini kerangkanya.</p>
+
+<h2>Checklist struktur naskah</h2>
+<div class="grid2">
+<div class="tile"><h4>Pendahuluan</h4><p>Fenomena properti, pertanyaan riset, kontribusi.</p></div>
+<div class="tile"><h4>Tinjauan &amp; hipotesis</h4><p>Teori (misal model hedonik) + studi terdahulu → tanda yang diharapkan.</p></div>
+<div class="tile"><h4>Data &amp; metode</h4><p>Sumber, n, definisi variabel, spesifikasi model dalam persamaan.</p></div>
+<div class="tile"><h4>Hasil</h4><p>Statistik deskriptif, tabel regresi, uji asumsi, robustness.</p></div>
+<div class="tile"><h4>Pembahasan</h4><p>Besaran ekonomi, bandingkan dengan studi lain, keterbatasan.</p></div>
+<div class="tile"><h4>Kesimpulan</h4><p>Jawab pertanyaan riset + implikasi bagi penilai/kebijakan.</p></div>
+</div>
+
+<h2>Memilih model: pohon keputusan</h2>
+<div class="tw"><table class="t">
+<tr><th>Variabel dependen (y) kamu…</th><th>Model</th><th>Perintah</th></tr>
+<tr><td>Kontinu (harga, nilai tanah)</td><td>OLS (sering log)</td><td><code>regress</code></td></tr>
+<tr><td>Biner (laku/tidak)</td><td>Logit / probit / LPM</td><td><code>logit</code>, <code>probit</code></td></tr>
+<tr><td>Kategori tanpa urutan</td><td>Multinomial logit</td><td><code>mlogit</code></td></tr>
+<tr><td>Kategori berurutan</td><td>Ordered logit/probit</td><td><code>ologit</code></td></tr>
+<tr><td>Hitungan 0,1,2…</td><td>Poisson / NegBin</td><td><code>poisson</code>, <code>nbreg</code></td></tr>
+<tr><td>Kontinu, banyak nol</td><td>Tobit</td><td><code>tobit</code></td></tr>
+<tr><td>Hanya teramati sebagian</td><td>Heckman</td><td><code>heckman</code></td></tr>
+<tr><td>Lama waktu sampai kejadian</td><td>Durasi (KM, Cox)</td><td><code>stset</code>, <code>stcox</code></td></tr>
+<tr><td>Satu seri berurutan waktu</td><td>ARIMA</td><td><code>arima</code></td></tr>
+<tr><td>Unit sama, banyak periode</td><td>Panel FE/RE</td><td><code>xtreg</code></td></tr>
+</table></div>
+
+<h2>Do-file analisis lengkap (siap adaptasi)</h2>
+<div class="code" data-t="analisis_lengkap.do"><pre>clear all
+set more off
+capture log close
+log using "analisis.log", text replace
+bcuse hprice1, clear
+
+* Statistik deskriptif untuk Tabel 1
+estpost summarize price sqrft bdrms lotsize colonial
+esttab using "tabel1.rtf", cells("mean(fmt(2)) sd(fmt(2)) min max") replace
+
+* Model bertahap
+eststo clear
+eststo m1: regress lprice lsqrft
+eststo m2: regress lprice lsqrft llotsize bdrms
+eststo m3: regress lprice lsqrft llotsize bdrms colonial, vce(robust)
+
+* Diagnostik pada model utama (tanpa robust)
+quietly regress lprice lsqrft llotsize bdrms colonial
+estat hettest
+estat ovtest
+estat vif
+
+* Tabel 2 regresi
+esttab m1 m2 m3 using "tabel2.rtf", se r2 ar2 ///
+   star(* 0.10 ** 0.05 *** 0.01) label mtitles("M1" "M2" "M3") replace
+
+* Grafik
+twoway (scatter lprice lsqrft) (lfit lprice lsqrft), ytitle("ln harga") xtitle("ln luas")
+graph export "gambar1.png", replace width(1800)
+log close</pre></div>
+
+<div class="key"><b class="t">Contoh narasi hasil</b>“Pada Model 3, elastisitas harga terhadap luas bangunan sebesar 0,70 dan signifikan pada α = 1%: rumah dengan luas 10% lebih besar dihargai sekitar 7% lebih tinggi, ceteris paribus. Temuan ini konsisten dengan teori harga hedonik…”</div>
+</section>
+
+<!-- ============ M16 ============ -->
+<section class="mod" id="m16" data-g="Bonus" data-t="Time series &amp; ARIMA">
+<span class="pill">Bab 16 · Bonus</span>
+<h1>Time series &amp; <em>ARIMA</em>: meramal dari masa lalu</h1>
+<p class="lead">Indeks harga properti bulan ini mirip bulan lalu. Informasi “ingatan” itulah yang dipakai ARIMA untuk memprediksi.</p>
+
+<h2>Tiga huruf, tiga ide</h2>
+<div class="grid2">
+<div class="tile"><h4>AR(p) · AutoRegressive</h4><p>Nilai sekarang bergantung pada <b>nilai</b> sebelumnya: yₜ = φ₁yₜ₋₁ + … + εₜ</p></div>
+<div class="tile"><h4>I(d) · Integrated</h4><p>Berapa kali data di-<b>differencing</b> (Δyₜ = yₜ − yₜ₋₁) agar stasioner.</p></div>
+<div class="tile"><h4>MA(q) · Moving Average</h4><p>Nilai sekarang bergantung pada <b>kejutan</b> sebelumnya: yₜ = εₜ + θ₁εₜ₋₁ + …</p></div>
+</div>
+<div class="formula">ARIMA(p,d,q): Δᵈyₜ = c + φ₁Δᵈyₜ₋₁ + … + φₚΔᵈyₜ₋ₚ + εₜ + θ₁εₜ₋₁ + … + θ_qεₜ₋_q</div>
+<div class="bedah" data-f="yt|=|c|+|phi|yt1|+|et|+|th1|et1"><div class="bh">🔬 Bedah ARMA(1,1) <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Contoh ARMA(1,1): nilai sekarang = konstanta + sebagian nilai kemarin + kejutan hari ini + sebagian kejutan kemarin."></div></div>
+
+<h2>Stasioneritas: syarat pertama</h2>
+<p>Seri stasioner punya rata-rata dan varians yang stabil. Harga rumah biasanya <b>naik terus</b> (tren), jadi tidak stasioner. Regresi dua seri tak stasioner bisa menghasilkan <b>spurious regression</b>: R² tinggi padahal tidak ada hubungan.</p>
+<div class="tip"><b class="t">Uji akar unit (ADF)</b>H₀: ada akar unit (tidak stasioner). p &lt; 0,05 → tolak H₀ → stasioner. Kalau gagal tolak, differencing dan uji lagi.</div>
+
+<div class="lab">
+<div class="lt">🧪 Lab: simulasi ARIMA + ACF/PACF <span class="pill mint">kenali polanya</span></div>
+<canvas id="cvAR" width="820" height="230"></canvas>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:10px">
+<div><div class="muted" style="font-size:13px">ACF</div><canvas id="cvACF" width="400" height="160"></canvas></div>
+<div><div class="muted" style="font-size:13px">PACF</div><canvas id="cvPACF" width="400" height="160"></canvas></div>
+</div>
+<div class="ctrls">
+<label>φ (AR) <input type="range" id="arPhi" min="-0.95" max="0.95" step="0.05" value="0.7"></label>
+<label>θ (MA) <input type="range" id="arTheta" min="-0.95" max="0.95" step="0.05" value="0"></label>
+<label>d <select id="arD"><option>0</option><option>1</option></select></label>
+<button class="btn ghost" id="arNew">Kejutan baru</button>
+</div>
+<div class="explain" id="arHint"></div>
+</div>
+
+<h2>Pola ACF/PACF (metode Box–Jenkins)</h2>
+<div class="tw"><table class="t">
+<tr><th>Model</th><th>ACF</th><th>PACF</th></tr>
+<tr><td>AR(p)</td><td>Meluruh perlahan</td><td><b>Terpotong</b> setelah lag p</td></tr>
+<tr><td>MA(q)</td><td><b>Terpotong</b> setelah lag q</td><td>Meluruh perlahan</td></tr>
+<tr><td>ARMA(p,q)</td><td>Meluruh</td><td>Meluruh</td></tr>
+<tr><td>Tidak stasioner</td><td>Sangat lambat turun, dekat 1</td><td>Lag 1 ≈ 1</td></tr>
+</table></div>
+
+<h2>Box–Jenkins di Stata, langkah demi langkah</h2>
+<div class="code" data-t="arima.do"><pre>* --- 0. Siapkan data waktu ---
+webuse wpi1, clear             // indeks harga grosir AS, kuartalan
+tsset t                        // deklarasi waktu (sudah %tq)
+* data bulanan sendiri: gen bulan = ym(2010,1) + _n - 1
+*                        format bulan %tm
+*                        tsset bulan
+
+* --- 1. Identifikasi ---
+tsline wpi
+capture generate ln_wpi = ln(wpi)   // di wpi1 sudah tersedia
+dfuller ln_wpi, trend lags(4)     // H0: akar unit
+dfuller D.ln_wpi, lags(4)         // setelah differencing
+tsline D.ln_wpi
+ac  D.ln_wpi, lags(20)
+pac D.ln_wpi, lags(20)
+corrgram D.ln_wpi, lags(12)
+
+* --- 2. Estimasi beberapa kandidat ---
+arima ln_wpi, arima(1,1,1)
+estimates store a111
+estat ic
+arima D.ln_wpi, ar(1) ma(1 4)     // contoh manual Stata: MA musiman lag 4
+estimates store a1ma14
+estat ic
+estimates stats a111 a1ma14       // pilih AIC/BIC terkecil
+
+* --- 3. Diagnostik ---
+predict res, residuals
+wntestq res, lags(12)             // H0: residual white noise (harapannya p besar)
+estat aroots                      // akar di dalam lingkaran = stabil
+
+* --- 4. Peramalan ---
+tsappend, add(8)                  // tambah 8 kuartal ke depan
+predict ln_f, y dynamic(tq(1991q1))
+generate wpi_f = exp(ln_f)
+tsline wpi wpi_f if tin(1985q1,), legend(order(1 "Aktual" 2 "Ramalan"))</pre></div>
+
+<div class="warn"><b class="t">Catatan</b>Di Stata, <code>D.</code> = difference, <code>L.</code> = lag, <code>F.</code> = lead, <code>S4.</code> = seasonal difference. Operator ini hanya bekerja setelah <code>tsset</code>. Dengan <code>arima ln_wpi, arima(1,1,1)</code> perintah <code>predict …, y</code> otomatis mengembalikan ke level ln_wpi.</div>
+
+<div class="quiz">
+<div class="q" data-a="1"><p>ACF terpotong setelah lag 2, PACF meluruh perlahan. Kandidat model?</p><div class="opts"><button>AR(2)</button><button>MA(2)</button><button>Tidak stasioner</button></div><div class="fb" data-why="ACF cut-off di q → MA(q)."></div></div>
+<div class="q" data-a="2"><p><code>dfuller ln_harga</code> memberi p = 0,62. Langkah berikutnya?</p><div class="opts"><button>Langsung arima dengan d = 0</button><button>Simpulkan data stasioner</button><button>Differencing (D.ln_harga) lalu uji lagi</button></div><div class="fb" data-why="p besar → gagal tolak akar unit → tidak stasioner → d minimal 1."></div></div>
+</div>
+</section>
+
+<!-- ============ M17 ============ -->
+<section class="mod" id="m17" data-g="Bonus" data-t="Data panel">
+<span class="pill">Bab 17 · Bonus</span>
+<h1>Data panel: <em>fixed</em> atau <em>random</em> effects?</h1>
+<p class="lead">Mengamati kabupaten yang sama tiap tahun memberi kekuatan super: kita bisa menghapus faktor tetap yang tidak terlihat, misalnya “daya tarik” sebuah daerah.</p>
+
+<div class="formula">yᵢₜ = β₀ + β₁xᵢₜ + aᵢ + uᵢₜ &nbsp;&nbsp;(aᵢ = efek individu yang tetap sepanjang waktu)</div>
+<div class="bedah" data-f="yit|=|b0|+|b1|xit|+|ai|+|uit"><div class="bh">🔬 Bedah rumus <span class="muted">· klik tiap simbol</span></div><div class="bf"></div><div class="bx" data-cap="Setiap unit punya “bawaan” tetap aᵢ; fixed effects menghapusnya dengan membandingkan unit dengan dirinya sendiri dari waktu ke waktu."></div></div>
+<div class="tw"><table class="t">
+<tr><th>Estimator</th><th>Ide</th><th>Kapan cocok</th></tr>
+<tr><td>Pooled OLS</td><td>Abaikan struktur panel</td><td>Jika aᵢ tidak ada/tidak berkorelasi (jarang)</td></tr>
+<tr><td><b>Fixed Effects (FE)</b></td><td>Kurangkan rata-rata tiap unit → aᵢ hilang</td><td>aᵢ boleh berkorelasi dengan x; variabel tetap waktu ikut hilang</td></tr>
+<tr><td><b>Random Effects (RE)</b></td><td>aᵢ diperlakukan sebagai galat acak</td><td>aᵢ tidak berkorelasi dengan x; lebih efisien</td></tr>
+<tr><td>First difference</td><td>Δyᵢₜ = β₁Δxᵢₜ + Δuᵢₜ</td><td>Alternatif FE, terutama T = 2</td></tr>
+</table></div>
+
+<div class="code" data-t="panel.do"><pre>webuse nlswork, clear
+xtset idcode year                 // unit, waktu
+xtdescribe
+xtsum ln_wage hours tenure
+
+regress ln_wage age tenure hours, vce(cluster idcode)   // pooled
+xtreg ln_wage age tenure hours, fe
+estimates store fe
+xtreg ln_wage age tenure hours, re
+estimates store re
+hausman fe re                     // H0: RE konsisten → p kecil pilih FE
+xtreg ln_wage age tenure hours i.year, fe vce(cluster idcode)   // + efek tahun</pre></div>
+
+<div class="quiz">
+<div class="q" data-a="0"><p>Uji Hausman memberi p = 0,000. Pilihan?</p><div class="opts"><button>Fixed effects</button><button>Random effects</button><button>Pooled OLS</button></div><div class="fb" data-why="Tolak H₀ bahwa perbedaan FE dan RE tidak sistematis → RE tidak konsisten → FE."></div></div>
+</div>
+</section>
+
+<!-- ============ M18 ============ -->
+<section class="mod" id="m18" data-g="Bonus" data-t="Contekan Stata &amp; kartu">
+<span class="pill mint">Bab 18 · Referensi</span>
+<h1>Contekan <em>Stata</em> &amp; kartu hafalan</h1>
+<p class="lead">Ketik kata kunci: “robust”, “log”, “dummy”, “arima”…</p>
+<input class="search" id="cheatQ" placeholder="Cari perintah atau fungsi…" aria-label="Cari perintah">
+<div class="tw"><table class="t" id="cheatT"><thead><tr><th>Perintah</th><th>Kegunaan</th><th>Bab</th></tr></thead><tbody></tbody></table></div>
+
+<h2>Kamus simbol</h2>
+<p class="muted">Semua simbol yang muncul di website ini. Tombol <b>Σ Kamus simbol</b> di pojok kanan bawah membuka daftar ini dari bab mana pun.</p>
+<div id="kamusInline"></div>
+<h2>Kartu hafalan</h2>
+<p class="muted">Klik kartu untuk membalik.</p>
+<div class="grid2" id="cards"></div>
+
+<h2>Referensi</h2>
+<ul>
+<li>Wooldridge, J. M. <i>Introductory Econometrics: A Modern Approach</i> (buku utama kuliah).</li>
+<li>Gujarati &amp; Porter, <i>Basic Econometrics</i>.</li>
+<li>Materi kuliah S1–S6 Ekonometrika 1, Yudistira Hendra Permana, Ph.D. (folder kamu).</li>
+<li>UCLA OARC Stata Resources — contoh <code>elemapi</code> di do-file Sesi 2 berasal dari sini.</li>
+<li>Manual Stata: ketik <code>help nama_perintah</code>; contoh ARIMA dan wpi1 dari <code>help arima</code>.</li>
+</ul>
+</section>
+
+<div class="next">
+<button class="btn ghost" id="prevBtn">← Sebelumnya</button>
+<button class="btn donebtn" id="doneBtn">✓ Tandai selesai</button>
+<button class="btn" id="nextBtn">Berikutnya →</button>
+</div>
+</div>
+</main>
+</div>
+<button class="fab" id="fab" type="button">Σ Kamus simbol</button>
+<div class="drawer" id="drawer" hidden>
+<div class="dh"><b>Kamus simbol</b><button class="btn ghost" id="drawerX" type="button">Tutup</button></div>
+<input class="search" id="symQ" placeholder="Cari: topi, beta, residual, sigma…" aria-label="Cari simbol">
+<div id="kamusDrawer"></div>
+</div>
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const mods=$$('section.mod');
+let done=new Set(store.get('epl_done',[]));
+let cur=0;
+
+/* ---------- NAV ---------- */
+const nav=$('#nav'); let g=null, grp;
+mods.forEach((m,i)=>{
+  if(m.dataset.g!==g){g=m.dataset.g;const h=document.createElement('div');h.className='navgroup';h.textContent=g;nav.appendChild(h);grp=document.createElement('div');grp.className='nav';nav.appendChild(grp);}
+  const b=document.createElement('button');b.type='button';
+  b.innerHTML=`<span class="n">${String(i).padStart(2,'0')}</span><span>${m.dataset.t}</span><span class="ck"></span>`;
+  b.onclick=()=>go(i);grp.appendChild(b);m._btn=b;
+});
+const tiles=$('#mapTiles');
+mods.slice(1).forEach((m,j)=>{const d=document.createElement('div');d.className='tile click';d.tabIndex=0;
+  d.innerHTML=`<h4>${m.dataset.t}</h4><p>${m.dataset.g} · bab ${j+1}</p>`;d.onclick=()=>go(j+1);d.onkeydown=e=>{if(e.key==='Enter')go(j+1)};tiles.appendChild(d);});
+function refreshProg(){mods.forEach((m,i)=>m._btn.querySelector('.ck').classList.toggle('done',done.has(m.id)));
+  $('#progtxt').textContent=`${done.size} dari ${mods.length} bab selesai`;$('#progbar').style.width=(100*done.size/mods.length)+'%';
+  $('#doneBtn').textContent=done.has(mods[cur].id)?'✓ Sudah selesai':'✓ Tandai selesai';}
+function go(i,noScroll){cur=Math.max(0,Math.min(mods.length-1,i));
+  mods.forEach((m,j)=>{m.classList.toggle('on',j===cur);m._btn.setAttribute('aria-current',j===cur)});
+  $('#crumb').textContent=`${mods[cur].dataset.g} · ${mods[cur].dataset.t.replace('&amp;','&')}`;
+  $('#prevBtn').hidden=cur===0;$('#nextBtn').hidden=cur===mods.length-1;
+  try{history.replaceState(null,'','#'+mods[cur].id)}catch(e){}
+  store.set('epl_cur',cur);$('#side').classList.remove('open');refreshProg();
+  if(!noScroll)window.scrollTo({top:0});
+  requestAnimationFrame(drawAll);}
+$('#prevBtn').onclick=()=>go(cur-1);$('#nextBtn').onclick=()=>go(cur+1);
+$('#doneBtn').onclick=()=>{const id=mods[cur].id;done.has(id)?done.delete(id):done.add(id);store.set('epl_done',[...done]);refreshProg();};
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+
+/* ---------- CODE ---------- */
+$$('.code').forEach(c=>{const pre=c.querySelector('pre');const raw=pre.textContent;
+  const hd=document.createElement('div');hd.className='hd';hd.innerHTML=`<span>${c.dataset.t||'stata'}</span><button type="button">Salin</button>`;
+  hd.querySelector('button').onclick=async e=>{try{await navigator.clipboard.writeText(raw);e.target.textContent='Tersalin ✓'}catch(_){const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);e.target.textContent='Tekan Ctrl+C'}setTimeout(()=>e.target.textContent='Salin',1600)};
+  c.prepend(hd);
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const kw=/\b(regress|reg|summarize|describe|codebook|tabulate|generate|gen|replace|import|use|save|test|predict|logit|probit|tobit|mlogit|ologit|oprobit|poisson|nbreg|heckman|arima|dfuller|tsset|xtset|xtreg|hausman|margins|estat|stset|stcox|sts|streg|scatter|twoway|histogram|graph|correlate|pwcorr|ttest|lincom|estimates|esttab|eststo|estpost|log|clear|cd|encode|destring|duplicates|label|drop|rename|egen|list|display|ac|pac|corrgram|wntestq|tsappend|tsline|bcuse|webuse|sysuse|ssc|lrtest|quietly|capture|set|version|misstable|count|rvfplot|qnorm|swilk|brant|xtdescribe|xtsum|stdescribe|help)\b/g;
+  pre.innerHTML=raw.split('\n').map(line=>{
+    let code=line,cm='';const t=line.trimStart();
+    if(t.startsWith('*')){return `<span class="c">${esc(line)}</span>`}
+    const k=line.indexOf('//');if(k>=0){code=line.slice(0,k);cm=line.slice(k)}
+    code=esc(code).replace(/"[^"]*"/g,m=>`<span class="s">${m}</span>`).replace(kw,m=>`<span class="k">${m}</span>`);
+    return code+(cm?`<span class="c">${esc(cm)}</span>`:'');
+  }).join('\n');
+});
+
+/* ---------- QUIZ ---------- */
+$$('.q').forEach(q=>{const a=+q.dataset.a;const bs=[...q.querySelectorAll('.opts button')];const fb=q.querySelector('.fb');
+  bs.forEach((b,i)=>b.onclick=()=>{bs.forEach(x=>x.classList.remove('right','wrong'));
+    if(i===a){b.classList.add('right');fb.innerHTML='<b style="color:var(--mint)">Tepat! </b>'+fb.dataset.why}
+    else{b.classList.add('wrong');fb.innerHTML='<b style="color:var(--warn)">Belum tepat, coba lagi. </b>Petunjuk: '+fb.dataset.why.split('.')[0]+'.'}});});
+
+/* ---------- REG OUTPUT ---------- */
+const EX={
+ n:'<b>Number of obs = 88</b>: jumlah observasi yang dipakai. Baris dengan missing di salah satu variabel otomatis dibuang, jadi selalu cek angka ini.',
+ F:'<b>F(2, 85) = 72,96</b>: uji apakah <i>semua</i> slope sama dengan nol. 2 = jumlah regresor (k), 85 = n − k − 1.',
+ pF:'<b>Prob &gt; F = 0,0000</b>: p-value uji F. Sangat kecil → minimal satu variabel berpengaruh. Model “layak”.',
+ sse:'<b>SS Model (SSE)</b>: variasi harga yang dijelaskan model. Σ(ŷᵢ − ȳ)².',
+ ssr:'<b>SS Residual (SSR)</b>: variasi yang tidak terjelaskan. Σûᵢ². OLS membuat angka ini sekecil mungkin.',
+ sst:'<b>SS Total (SST)</b>: total variasi harga = SSE + SSR. 580.009 + 337.845 = 917.854 ✔',
+ r2:'<b>R² = 0,6319</b> = SSE/SST. Sekitar 63% variasi harga rumah dijelaskan oleh luas dan jumlah kamar.',
+ ar2:'<b>Adjusted R² = 0,6233</b>: R² yang “dihukum” karena jumlah variabel. Pakai ini saat membandingkan model dengan jumlah regresor berbeda.',
+ rmse:'<b>Root MSE = 63,05</b> = √(SSR/(n−k−1)) = estimasi σ. Rata-rata kasar prediksi meleset ±63 ribu USD.',
+ coef:'<b>Coefficient</b>: β̂, besar perubahan y untuk kenaikan 1 unit x, variabel lain tetap.',
+ se:'<b>Std. err.</b>: seberapa “goyang” estimasi β̂ jika sampel diulang. Makin kecil makin presisi.',
+ t:'<b>t</b> = Coefficient / Std. err. Contoh sqrft: 0,1284 / 0,0138 ≈ 9,29. |t| &gt; ~1,99 berarti signifikan di 5% (df = 85).',
+ p:'<b>P&gt;|t|</b>: p-value dua sisi untuk H₀: β = 0. Bandingkan dengan α (0,01 / 0,05 / 0,10).',
+ ci:'<b>[95% conf. interval]</b> = β̂ ± t<sub>0,025;85</sub> × SE. Jika tidak memuat 0 → signifikan di 5%.',
+ b1:'<b>sqrft = 0,1284</b>: tambahan 1 sqft berasosiasi dengan harga +0,128 ribu USD (≈ 128 USD), jumlah kamar tetap. +100 sqft ≈ +12.800 USD. Sangat signifikan (p = 0,000).',
+ b2:'<b>bdrms = 15,20</b>: satu kamar tambahan, luas tetap, berasosiasi dengan harga +15.200 USD. Tapi p = 0,113 → tidak signifikan di 5%.',
+ p2:'<b>p = 0,113</b> &gt; 0,05 → gagal tolak H₀ untuk bdrms. Pada uji satu sisi (H₁: β &gt; 0), p ≈ 0,057, signifikan di 10%.',
+ b0:'<b>_cons = −19,3</b>: prediksi harga jika luas = 0 dan kamar = 0. Tidak bermakna ekonomi (tak ada rumah 0 sqft), tapi dibutuhkan agar garis pas.'
+};
+$$('#regOut .hl').forEach(s=>{s.tabIndex=0;const f=()=>{$$('#regOut .hl').forEach(x=>x.classList.remove('on'));s.classList.add('on');$('#regExplain').innerHTML=EX[s.dataset.k]};s.onclick=f;s.onkeydown=e=>{if(e.key==='Enter')f()}});
+
+/* ---------- MATH ---------- */
+function lgamma(x){const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];let y=x,t=x+5.5;t-=(x+.5)*Math.log(t);let s=1.000000000190015;for(const k of c)s+=k/++y;return -t+Math.log(2.5066282746310005*s/x)}
+function betacf(a,b,x){let qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap;if(Math.abs(d)<1e-30)d=1e-30;d=1/d;let h=d;for(let m=1;m<=200;m++){let m2=2*m,aa=m*(b-m)*x/((qam+m2)*(a+m2));d=1+aa*d;if(Math.abs(d)<1e-30)d=1e-30;c=1+aa/c;if(Math.abs(c)<1e-30)c=1e-30;d=1/d;h*=d*c;aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));d=1+aa*d;if(Math.abs(d)<1e-30)d=1e-30;c=1+aa/c;if(Math.abs(c)<1e-30)c=1e-30;d=1/d;const del=d*c;h*=del;if(Math.abs(del-1)<3e-7)break}return h}
+function ibeta(x,a,b){if(x<=0)return 0;if(x>=1)return 1;const bt=Math.exp(lgamma(a+b)-lgamma(a)-lgamma(b)+a*Math.log(x)+b*Math.log(1-x));return x<(a+1)/(a+b+2)?bt*betacf(a,b,x)/a:1-bt*betacf(b,a,1-x)/b}
+const tP=(t,df)=>ibeta(df/(df+t*t),df/2,.5);
+const tPdf=(t,df)=>Math.exp(lgamma((df+1)/2)-lgamma(df/2))/Math.sqrt(df*Math.PI)*Math.pow(1+t*t/df,-(df+1)/2);
+function tCrit(a,df){let lo=0,hi=20;for(let i=0;i<60;i++){const m=(lo+hi)/2;tP(m,df)>a?lo=m:hi=m}return (lo+hi)/2}
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646};
+const randn=()=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+const fmt=(x,d=3)=>Number.isFinite(x)?x.toLocaleString('id-ID',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
+
+function ctx(id){const c=document.getElementById(id);const x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);x.font='13px "JetBrains Mono", monospace';return [c,x]}
+function axes(x,W,H,P,col){x.strokeStyle=col;x.lineWidth=1.5;x.beginPath();x.moveTo(P.l,P.t);x.lineTo(P.l,H-P.b);x.lineTo(W-P.r,H-P.b);x.stroke()}
+
+/* ---------- LAB T ---------- */
+function drawT(){if(!$('#m4').classList.contains('on'))return;const [c,x]=ctx('cvT');const W=c.width,H=c.height,P={l:30,r:20,t:20,b:36};
+  const t=+$('#tSlider').value,df=+$('#tDf').value,al=+$('#tAlpha').value;const tc=tCrit(al,df);const p=tP(t,df);
+  const X=v=>P.l+(v+5)/10*(W-P.l-P.r),Y=v=>H-P.b-v/0.42*(H-P.t-P.b);
+  x.fillStyle=css('--soft');x.beginPath();for(const s of[-1,1]){x.moveTo(X(s*t),Y(0));for(let v=t;v<=5;v+=.02)x.lineTo(X(s*v),Y(tPdf(v,df)));x.lineTo(X(s*5),Y(0));}
+  x.fill();
+  x.fillStyle=css('--accent');x.globalAlpha=.45;x.beginPath();for(const s of[-1,1]){x.moveTo(X(s*Math.max(t,0)),Y(0));for(let v=Math.max(t,0);v<=5;v+=.02)x.lineTo(X(s*v),Y(tPdf(v,df)));x.lineTo(X(s*5),Y(0));}x.fill();x.globalAlpha=1;
+  x.strokeStyle=css('--ink');x.lineWidth=2.5;x.beginPath();for(let v=-5;v<=5;v+=.02){const px=X(v),py=Y(tPdf(v,df));v===-5?x.moveTo(px,py):x.lineTo(px,py)}x.stroke();
+  axes(x,W,H,P,css('--line'));
+  x.setLineDash([5,5]);x.strokeStyle=css('--lav');x.lineWidth=2;for(const s of[-1,1]){x.beginPath();x.moveTo(X(s*tc),P.t);x.lineTo(X(s*tc),H-P.b);x.stroke()}x.setLineDash([]);
+  x.fillStyle=css('--muted');x.textAlign='center';for(let v=-4;v<=4;v+=2)x.fillText(v,X(v),H-P.b+18);
+  x.fillStyle=css('--lav');x.fillText('t kritis ±'+tc.toFixed(2),X(tc),P.t+4);
+  x.strokeStyle=css('--accent-ink');x.lineWidth=3;x.beginPath();x.moveTo(X(t),H-P.b);x.lineTo(X(t),Y(tPdf(t,df))-10);x.stroke();
+  const rej=p<al;
+  $('#tStats').innerHTML=`<span class="stat">t = <b>${fmt(t,2)}</b></span><span class="stat">p-value (dua sisi) = <b>${fmt(p,4)}</b></span><span class="stat">t kritis = <b>${fmt(tc,3)}</b></span><span class="pill ${rej?'mint':''}">${rej?'Tolak H₀ → signifikan':'Gagal tolak H₀'}</span>`;}
+['#tSlider','#tDf','#tAlpha'].forEach(s=>$(s).addEventListener('input',drawT));
+
+/* ---------- LAB OLS ---------- */
+let pts=[];function olsSample(){seed=11;pts=[];for(let i=0;i<18;i++){const xx=1+rnd()*8;pts.push([xx,1.2+0.75*xx+randn()*0.9])}}
+olsSample();
+function fit(P){const n=P.length;if(n<2)return null;const mx=P.reduce((s,p)=>s+p[0],0)/n,my=P.reduce((s,p)=>s+p[1],0)/n;let sxy=0,sxx=0,sst=0;P.forEach(p=>{sxy+=(p[0]-mx)*(p[1]-my);sxx+=(p[0]-mx)**2;sst+=(p[1]-my)**2});if(sxx===0)return null;const b1=sxy/sxx,b0=my-b1*mx;let ssr=0;P.forEach(p=>ssr+=(p[1]-b0-b1*p[0])**2);return{b0,b1,mx,my,ssr,sst,r2:sst?1-ssr/sst:0,n,se1:n>2?Math.sqrt(ssr/(n-2)/sxx):NaN}}
+function drawOLS(){if(!$('#m5').classList.contains('on'))return;const [c,x]=ctx('cvOLS');const W=c.width,H=c.height,P={l:44,r:16,t:16,b:36};
+  const X=v=>P.l+v/10*(W-P.l-P.r),Y=v=>H-P.b-v/10*(H-P.t-P.b);
+  x.strokeStyle=css('--line');x.lineWidth=1;x.fillStyle=css('--muted');x.textAlign='center';
+  for(let v=0;v<=10;v+=2){x.globalAlpha=.5;x.beginPath();x.moveTo(X(v),P.t);x.lineTo(X(v),H-P.b);x.moveTo(P.l,Y(v));x.lineTo(W-P.r,Y(v));x.stroke();x.globalAlpha=1;x.fillText(v,X(v),H-P.b+18);x.textAlign='right';x.fillText(v,P.l-8,Y(v)+4);x.textAlign='center'}
+  x.fillText('x (luas, ratus m²)',W/2,H-4);
+  const f=fit(pts);const mine=$('#olsMine').checked;
+  let mf=null;if(f&&mine){const s=+$('#mineSlope').value;mf={b1:s,b0:f.my-s*f.mx};mf.ssr=pts.reduce((a,p)=>a+(p[1]-mf.b0-mf.b1*p[0])**2,0)}
+  if(f&&$('#olsSq').checked){pts.forEach(p=>{const yh=f.b0+f.b1*p[0];const d=Math.abs(Y(p[1])-Y(yh));x.fillStyle=css('--accent');x.globalAlpha=.10;x.fillRect(X(p[0]),Math.min(Y(p[1]),Y(yh)),d,d);x.globalAlpha=.8;x.strokeStyle=css('--accent');x.setLineDash([4,3]);x.beginPath();x.moveTo(X(p[0]),Y(p[1]));x.lineTo(X(p[0]),Y(yh));x.stroke();x.setLineDash([])});x.globalAlpha=1}
+  const line=(b0,b1,col,w,dash)=>{x.save();x.beginPath();x.rect(P.l,P.t,W-P.l-P.r,H-P.t-P.b);x.clip();x.strokeStyle=col;x.lineWidth=w;if(dash)x.setLineDash(dash);x.beginPath();x.moveTo(X(0),Y(b0));x.lineTo(X(10),Y(b0+b1*10));x.stroke();x.restore()};
+  if(mf)line(mf.b0,mf.b1,css('--warn'),3,[10,6]);
+  if(f){line(f.b0,f.b1,css('--lav'),4);x.fillStyle=css('--ink');x.beginPath();x.arc(X(f.mx),Y(f.my),6,0,7);x.fill();x.fillStyle=css('--muted');x.textAlign='left';x.fillText('(x̄, ȳ)',X(f.mx)+9,Y(f.my)-9)}
+  pts.forEach(p=>{x.fillStyle=css('--accent-ink');x.beginPath();x.arc(X(p[0]),Y(p[1]),6.5,0,7);x.fill();x.strokeStyle=css('--surface');x.lineWidth=2;x.stroke()});
+  axes(x,W,H,P,css('--muted'));
+  $('#olsStats').innerHTML=f?`<span class="stat">n = <b>${f.n}</b></span><span class="stat">ŷ = <b>${fmt(f.b0,2)} + ${fmt(f.b1,3)}x</b></span><span class="stat">se(β̂₁) = <b>${fmt(f.se1,3)}</b></span><span class="stat">SSR = <b>${fmt(f.ssr,2)}</b></span><span class="stat">R² = <b>${fmt(f.r2,3)}</b></span>${mf?`<span class="stat" style="color:var(--warn)">SSR tebakanmu = <b>${fmt(mf.ssr,2)}</b></span>`:''}`:'<span class="stat">Tambahkan minimal 2 titik dengan x berbeda</span>';}
+$('#cvOLS').addEventListener('pointerdown',e=>{const c=e.currentTarget,r=c.getBoundingClientRect();const px=(e.clientX-r.left)*c.width/r.width,py=(e.clientY-r.top)*c.height/r.height;const P={l:44,r:16,t:16,b:36};
+  const vx=(px-P.l)/(c.width-P.l-P.r)*10,vy=(c.height-P.b-py)/(c.height-P.t-P.b)*10;if(vx<0||vx>10||vy<0||vy>10)return;
+  const hit=pts.findIndex(p=>Math.hypot(p[0]-vx,p[1]-vy)<0.25);if(hit>=0)pts.splice(hit,1);else pts.push([vx,vy]);drawOLS()});
+$('#olsOutlier').onclick=()=>{pts.push([9.2,1.2]);drawOLS()};$('#olsReset').onclick=()=>{olsSample();drawOLS()};$('#olsClear').onclick=()=>{pts=[];drawOLS()};
+$('#olsSq').onchange=drawOLS;$('#olsMine').onchange=()=>{$('#mineCtl').hidden=!$('#olsMine').checked;drawOLS()};$('#mineSlope').oninput=drawOLS;
+
+/* ---------- FUNCTIONAL FORM ---------- */
+function ff(){const t=$('#ffType').value,b=+$('#ffB').value,y=$('#ffY').value||'y',X=$('#ffX').value||'x';const pct=v=>fmt(v,2);let s='';
+  if(t==='ll')s=`Jika <b>${X}</b> naik <b>1 unit</b>, <b>${y}</b> berubah <b>${pct(b)} unit</b>, ceteris paribus.`;
+  if(t==='lg')s=`Jika <b>${X}</b> naik <b>1 unit</b>, <b>${y}</b> berubah sekitar <b>${pct(100*b)}%</b> (persis: ${pct(100*(Math.exp(b)-1))}%).`;
+  if(t==='gl')s=`Jika <b>${X}</b> naik <b>1%</b>, <b>${y}</b> berubah sekitar <b>${fmt(b/100,4)} unit</b>. (Naik 10% → ≈ ${fmt(b*Math.log(1.1),3)} unit.)`;
+  if(t==='gg')s=`Jika <b>${X}</b> naik <b>1%</b>, <b>${y}</b> berubah sekitar <b>${pct(b)}%</b>. Ini <b>elastisitas</b>: ${Math.abs(b)>1?'elastis (|β|>1)':Math.abs(b)<1?'inelastis (|β|<1)':'uniter'}.`;
+  if(t==='dm')s=`Kelompok <b>${X} = 1</b> memiliki <b>${y}</b> sekitar <b>${pct(100*(Math.exp(b)-1))}%</b> ${b>=0?'lebih tinggi':'lebih rendah'} dibanding kelompok dasar, ceteris paribus (pendekatan kasar 100·β = ${pct(100*b)}%).`;
+  $('#ffOut').innerHTML=s;}
+['#ffType','#ffB','#ffY','#ffX'].forEach(s=>$(s).addEventListener('input',ff));ff();
+
+/* ---------- MLE ---------- */
+function drawMLE(){if(!$('#m10').classList.contains('on'))return;const [c,x]=ctx('cvMLE');const W=c.width,H=c.height,P={l:60,r:20,t:20,b:36};const k=+$('#mleK').value,n=20,p=+$('#mleP').value;
+  const ll=q=>k*Math.log(q)+(n-k)*Math.log(1-q);const qs=[];for(let q=.01;q<=.99;q+=.005)qs.push(q);const vals=qs.map(ll);const mx=Math.max(...vals),mn=Math.max(Math.min(...vals),mx-40);
+  const X=q=>P.l+q*(W-P.l-P.r),Y=v=>H-P.b-(Math.max(v,mn)-mn)/(mx-mn)*(H-P.t-P.b);
+  x.fillStyle=css('--soft');x.beginPath();x.moveTo(X(qs[0]),H-P.b);qs.forEach((q,i)=>x.lineTo(X(q),Y(vals[i])));x.lineTo(X(qs[qs.length-1]),H-P.b);x.fill();
+  x.strokeStyle=css('--accent');x.lineWidth=3;x.beginPath();qs.forEach((q,i)=>i?x.lineTo(X(q),Y(vals[i])):x.moveTo(X(q),Y(vals[i])));x.stroke();
+  axes(x,W,H,P,css('--muted'));x.fillStyle=css('--muted');x.textAlign='center';for(let q=0;q<=1;q+=.25)x.fillText(q.toFixed(2),X(q),H-P.b+18);
+  x.save();x.translate(16,H/2);x.rotate(-Math.PI/2);x.fillText('log likelihood',0,0);x.restore();
+  const ph=Math.min(.99,Math.max(.01,k/n));x.setLineDash([5,5]);x.strokeStyle=css('--lav');x.lineWidth=2;x.beginPath();x.moveTo(X(ph),P.t);x.lineTo(X(ph),H-P.b);x.stroke();x.setLineDash([]);
+  x.fillStyle=css('--ink');x.beginPath();x.arc(X(p),Y(ll(p)),8,0,7);x.fill();
+  $('#mleStats').innerHTML=`<span class="stat">ℓ(p = ${fmt(p,2)}) = <b>${fmt(ll(p),2)}</b></span><span class="stat">p̂<sub>MLE</sub> = k/n = <b>${fmt(k/n,2)}</b></span><span class="stat">ℓ maksimum = <b>${fmt(ll(ph),2)}</b></span>`;}
+['#mleK','#mleP'].forEach(s=>$(s).addEventListener('input',drawMLE));
+
+/* ---------- LOGIT ---------- */
+function drawLogit(){if(!$('#m11').classList.contains('on'))return;const [c,x]=ctx('cvLogit');const W=c.width,H=c.height,P={l:48,r:20,t:16,b:36};
+  const b0=+$('#lgB0').value,b1=+$('#lgB1').value,xv=+$('#lgX').value;const G=z=>1/(1+Math.exp(-z));
+  const X=v=>P.l+v/20*(W-P.l-P.r),Y=v=>H-P.b-v*(H-P.t-P.b);
+  x.strokeStyle=css('--line');x.fillStyle=css('--muted');x.textAlign='right';for(let v=0;v<=1;v+=.25){x.beginPath();x.moveTo(P.l,Y(v));x.lineTo(W-P.r,Y(v));x.stroke();x.fillText(v.toFixed(2),P.l-6,Y(v)+4)}
+  x.textAlign='center';for(let v=0;v<=20;v+=5)x.fillText(v+'%',X(v),H-P.b+18);
+  if($('#lgLPM').checked){const a=G(b0+b1*10),s=G(b0+b1*10)*(1-G(b0+b1*10))*b1;x.strokeStyle=css('--warn');x.lineWidth=2.5;x.setLineDash([8,6]);x.beginPath();x.moveTo(X(0),Y(a-s*10));x.lineTo(X(20),Y(a+s*10));x.stroke();x.setLineDash([]);}
+  x.strokeStyle=css('--accent');x.lineWidth=4;x.beginPath();for(let v=0;v<=20;v+=.1){const px=X(v),py=Y(G(b0+b1*v));v?x.lineTo(px,py):x.moveTo(px,py)}x.stroke();
+  const pr=G(b0+b1*xv),me=pr*(1-pr)*b1;
+  x.strokeStyle=css('--lav');x.lineWidth=2.5;x.beginPath();x.moveTo(X(xv-3),Y(pr-3*me));x.lineTo(X(xv+3),Y(pr+3*me));x.stroke();
+  x.fillStyle=css('--ink');x.beginPath();x.arc(X(xv),Y(pr),7,0,7);x.fill();axes(x,W,H,P,css('--muted'));
+  $('#lgStats').innerHTML=`<span class="stat">P(laku | diskon ${fmt(xv,1)}%) = <b>${fmt(pr,3)}</b></span><span class="stat">efek marginal = <b>${fmt(me,3)}</b> per 1%</span><span class="stat">odds ratio e<sup>β₁</sup> = <b>${fmt(Math.exp(b1),3)}</b></span>${$('#lgLPM').checked?'<span class="stat" style="color:var(--warn)">garis putus = LPM, bisa keluar dari [0,1]</span>':''}`;}
+['#lgB0','#lgB1','#lgX','#lgLPM'].forEach(s=>$(s).addEventListener('input',drawLogit));
+
+/* ---------- KM ---------- */
+let kmSeed=3;
+function km(rate){const n=40,T=24;let d=[];for(let i=0;i<n;i++){const t=-Math.log(1-rnd())/rate;const cen=6+rnd()*30;d.push({t:Math.min(t,cen,T),e:t<=Math.min(cen,T)})}d.sort((a,b)=>a.t-b.t);let at=n,S=1,steps=[[0,1]],med=null;
+  d.forEach(o=>{if(o.e){S*=(at-1)/at;steps.push([o.t,S]);if(med===null&&S<=.5)med=o.t}at--});return{steps,med,ev:d.filter(o=>o.e).length}}
+function drawKM(){if(!$('#m14').classList.contains('on'))return;seed=kmSeed;const A=km(+$('#kmA').value),B=km(+$('#kmB').value);const [c,x]=ctx('cvKM');const W=c.width,H=c.height,P={l:48,r:20,t:16,b:36};
+  const X=v=>P.l+v/24*(W-P.l-P.r),Y=v=>H-P.b-v*(H-P.t-P.b);
+  x.strokeStyle=css('--line');x.fillStyle=css('--muted');x.textAlign='right';for(let v=0;v<=1;v+=.25){x.beginPath();x.moveTo(P.l,Y(v));x.lineTo(W-P.r,Y(v));x.stroke();x.fillText(v.toFixed(2),P.l-6,Y(v)+4)}
+  x.textAlign='center';for(let v=0;v<=24;v+=6)x.fillText(v+' bln',X(v),H-P.b+18);
+  const st=(s,col)=>{x.strokeStyle=col;x.lineWidth=3.5;x.beginPath();x.moveTo(X(0),Y(1));let py=1;s.steps.forEach(([t,S])=>{x.lineTo(X(t),Y(py));x.lineTo(X(t),Y(S));py=S});x.lineTo(X(24),Y(py));x.stroke()};
+  st(A,css('--accent'));st(B,css('--lav'));axes(x,W,H,P,css('--muted'));
+  x.textAlign='left';x.font='600 14px Figtree, sans-serif';x.fillStyle=css('--accent-ink');x.fillText('● Rumah',W-150,P.t+18);x.fillStyle=css('--lav');x.fillText('● Ruko',W-150,P.t+38);
+  const m=v=>v===null?'> 24 bln':fmt(v,1)+' bln';
+  $('#kmStats').innerHTML=`<span class="stat">median laku Rumah: <b>${m(A.med)}</b></span><span class="stat">median laku Ruko: <b>${m(B.med)}</b></span><span class="stat">HR Rumah vs Ruko ≈ <b>${fmt(+$('#kmA').value/+$('#kmB').value,2)}</b></span>`;}
+['#kmA','#kmB'].forEach(s=>$(s).addEventListener('input',drawKM));$('#kmNew').onclick=()=>{kmSeed=Math.floor(Math.random()*1e6)+1;drawKM()};
+
+/* ---------- ARIMA ---------- */
+let arSeed=5;
+function acf(y,L){const n=y.length,m=y.reduce((a,b)=>a+b,0)/n;let c0=0;y.forEach(v=>c0+=(v-m)**2);const r=[];for(let k=1;k<=L;k++){let s=0;for(let t=k;t<n;t++)s+=(y[t]-m)*(y[t-k]-m);r.push(s/c0)}return r}
+function pacf(r){const L=r.length,out=[];let phi=[];for(let k=1;k<=L;k++){let num=r[k-1],den=1;for(let j=1;j<k;j++){num-=phi[j-1]*r[k-j-1];den-=phi[j-1]*r[j-1]}const pk=num/den;const np=[];for(let j=1;j<k;j++)np.push(phi[j-1]-pk*phi[k-j-1]);np.push(pk);phi=np;out.push(pk)}return out}
+function bars(id,vals,n){const [c,x]=ctx(id);const W=c.width,H=c.height,P={l:30,r:8,t:10,b:22};const Y=v=>P.t+(1-v)/2*(H-P.t-P.b);const bw=(W-P.l-P.r)/vals.length;
+  const ci=1.96/Math.sqrt(n);x.fillStyle=css('--lav-soft');x.fillRect(P.l,Y(ci),W-P.l-P.r,Y(-ci)-Y(ci));
+  x.strokeStyle=css('--muted');x.beginPath();x.moveTo(P.l,Y(0));x.lineTo(W-P.r,Y(0));x.stroke();
+  vals.forEach((v,i)=>{x.fillStyle=Math.abs(v)>ci?css('--accent'):css('--line');const y0=Y(0),y1=Y(v);x.fillRect(P.l+i*bw+bw*.2,Math.min(y0,y1),bw*.6,Math.abs(y1-y0))});
+  x.fillStyle=css('--muted');x.textAlign='center';x.font='11px "JetBrains Mono", monospace';[1,5,10,15].forEach(k=>x.fillText(k,P.l+(k-.5)*bw,H-6));x.textAlign='right';x.fillText('1',P.l-4,Y(1)+8);x.fillText('0',P.l-4,Y(0)+4);x.fillText('-1',P.l-4,Y(-1));}
+function drawAR(){if(!$('#m16').classList.contains('on'))return;seed=arSeed;const phi=+$('#arPhi').value,th=+$('#arTheta').value,d=+$('#arD').value,n=220;
+  let e=[],w=[];for(let t=0;t<n+50;t++){e.push(randn());w.push((t?phi*w[t-1]:0)+e[t]+(t?th*e[t-1]:0))}w=w.slice(50);let y=w;if(d===1){y=[];let s=0;w.forEach(v=>{s+=v;y.push(s)})}
+  const [c,x]=ctx('cvAR');const W=c.width,H=c.height,P={l:14,r:14,t:14,b:14};const mn=Math.min(...y),mx=Math.max(...y);const X=i=>P.l+i/(n-1)*(W-P.l-P.r),Y=v=>H-P.b-(v-mn)/(mx-mn||1)*(H-P.t-P.b);
+  x.strokeStyle=css('--accent');x.lineWidth=2;x.beginPath();y.forEach((v,i)=>i?x.lineTo(X(i),Y(v)):x.moveTo(X(i),Y(v)));x.stroke();
+  const r=acf(y,15);bars('cvACF',r,n);bars('cvPACF',pacf(r),n);
+  let h;if(d===1)h='<b>d = 1</b>: seri berjalan acak (random walk). ACF turun sangat lambat dan PACF lag-1 ≈ 1, ciri <b>tidak stasioner</b>. Uji ADF akan gagal tolak H₀, jadi lakukan differencing.';
+  else if(Math.abs(th)<.05&&Math.abs(phi)>=.05)h=`<b>AR(1)</b>, φ = ${phi}: ACF meluruh ${phi<0?'bergantian tanda':'bertahap'}, PACF hanya menonjol di <b>lag 1</b>.`;
+  else if(Math.abs(phi)<.05&&Math.abs(th)>=.05)h=`<b>MA(1)</b>, θ = ${th}: ACF menonjol hanya di <b>lag 1</b>, PACF meluruh.`;
+  else if(Math.abs(phi)<.05&&Math.abs(th)<.05)h='<b>White noise</b>: hampir semua batang di dalam pita ungu (tidak signifikan). Inilah yang kita harapkan dari residual model yang baik.';
+  else h=`<b>ARMA(1,1)</b>, φ = ${phi}, θ = ${th}: ACF dan PACF sama-sama meluruh; pilih model lewat AIC/BIC.`;
+  $('#arHint').innerHTML=h+' <span class="muted">Batang pink = di luar pita signifikansi 95%.</span>';}
+['#arPhi','#arTheta','#arD'].forEach(s=>$(s).addEventListener('input',drawAR));$('#arNew').onclick=()=>{arSeed=Math.floor(Math.random()*1e6)+1;drawAR()};
+
+/* ---------- CHEAT ---------- */
+const CH=[['doedit','Buka do-file editor',1],['help regress','Manual perintah',1],['log using f.log, text replace','Rekam output',1],['cd "folder"','Pindah folder kerja',1],['ssc install nama','Pasang paket tambahan',1],
+['import excel f.xlsx, firstrow clear','Impor Excel',2],['import delimited f.csv, clear','Impor CSV',2],['use f.dta, clear / save f.dta, replace','Buka / simpan data Stata',2],['describe / codebook','Kenali variabel',2],['summarize x, detail','Statistik deskriptif',2],['tabulate x, missing','Tabel frekuensi',2],['duplicates report / drop','Cek & hapus duplikat',2],['misstable summarize','Pola missing',2],['generate / replace','Buat / ubah variabel',2],['egen m = mean(x), by(g)','Rata-rata per kelompok',2],['encode s, gen(n)','Teks → kode berlabel',2],['destring x, replace','Teks angka → numerik',2],['label variable x "..."','Beri label',2],['histogram x, normal','Histogram',2],['twoway (scatter y x) (lfit y x)','Scatter + garis',2],['graph export f.png, replace','Simpan grafik',2],
+['correlate / pwcorr, sig','Korelasi',4],['ttest x == 0 / ttest x, by(g)','Uji t',4],
+['regress y x1 x2','OLS',5],['predict yhat, xb / predict u, resid','Prediksi & residual',5],['regress ..., beta','Koefisien terstandar',6],['estimates store / table','Simpan & bandingkan model',6],['esttab m1 m2 using t.rtf','Tabel regresi rapi',6],
+['test x1 x2','Uji F gabungan',7],['lincom a*x1 - x2','Kombinasi linear',7],['display invttail(df, .025)','t kritis',7],
+['gen ly = ln(y)','Transformasi log',8],['i.group / c.x##c.x / i.d##c.x','Dummy, kuadrat, interaksi',8],['margins, dydx(x)','Efek marginal',8],['testparm i.g#c.x','Uji sekumpulan dummy/interaksi',8],
+['estat hettest / imtest, white','Uji heteroskedastisitas',9],['regress ..., vce(robust)','Robust SE',9],['estat vif','Multikolinearitas',9],['estat ovtest','Ramsey RESET',9],['swilk u / sktest u','Normalitas',9],['rvfplot','Plot residual vs fitted',9],['estat dwatson / bgodfrey','Autokorelasi',9],
+['lrtest m1 m2','Likelihood ratio',10],['estat ic','AIC & BIC',10],
+['logit / probit y x','Model biner',11],['logit ..., or','Odds ratio',11],['estat classification','Ketepatan klasifikasi',11],['tobit y x, ll(0)','Tobit tersensor',11],
+['mlogit y x, baseoutcome(1)','Multinomial logit',12],['ologit / oprobit y x','Ordered model',12],
+['poisson y x, vce(robust) / irr','Poisson',13],['nbreg y x','Negative binomial',13],['heckman y x, select(s = z x) twostep','Heckman',13],
+['stset t, failure(d)','Deklarasi data survival',14],['sts graph, by(g) / sts test g','Kaplan–Meier & log-rank',14],['stcox x','Cox PH',14],['estat phtest','Uji proportional hazards',14],
+['tsset t','Deklarasi time series',16],['D. L. F. S12.','Operator difference, lag, lead, seasonal',16],['dfuller y, trend lags(4)','Uji ADF',16],['ac y / pac y / corrgram y','ACF & PACF',16],['arima y, arima(1,1,1)','Estimasi ARIMA',16],['wntestq res','Uji white noise',16],['tsappend, add(8) + predict f, y dynamic()','Peramalan',16],
+['xtset id year','Deklarasi panel',17],['xtreg y x, fe / re','Fixed / random effects',17],['hausman fe re','Uji Hausman',17]];
+const tb=$('#cheatT tbody');function cheat(){const q=$('#cheatQ').value.toLowerCase();tb.innerHTML=CH.filter(r=>(r[0]+' '+r[1]).toLowerCase().includes(q)).map(r=>`<tr><td><code>${r[0].replace(/</g,'&lt;')}</code></td><td>${r[1]}</td><td><a href="#m${r[2]}" data-go="${r[2]}">Bab ${r[2]}</a></td></tr>`).join('')||'<tr><td colspan="3">Tidak ada yang cocok. Coba kata lain, misal “uji”.</td></tr>'}
+$('#cheatQ').addEventListener('input',cheat);cheat();
+tb.addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(a){e.preventDefault();go(+a.dataset.go)}});
+const CARDS=[['BLUE','Best Linear Unbiased Estimator: OLS di bawah asumsi Gauss–Markov (MLR.1–5).'],['Residual vs galat','û = y − ŷ bisa dihitung; u tidak teramati.'],['R²','Proporsi variasi y yang dijelaskan model = SSE/SST.'],['Elastisitas','Koefisien model log–log: %Δy per 1% Δx.'],['OVB','Bias karena variabel relevan yang berkorelasi dengan x terlupa: β₂·δ₁.'],['Heteroskedastisitas','Var(u|x) tidak konstan → SE salah → pakai robust.'],['Dummy trap','Memasukkan semua g dummy + konstanta → multikolinearitas sempurna.'],['Efek marginal logit','g(xβ)·β, bergantung pada nilai x.'],['Overdispersion','Varians > mean pada data hitungan → nbreg.'],['Sensor','Durasi belum selesai saat observasi berakhir.'],['Stasioner','Mean & varians stabil sepanjang waktu; syarat ARMA.'],['ACF cut-off','Tanda MA(q); PACF cut-off tanda AR(p).'],['Hausman','p kecil → pilih fixed effects.'],['p-value','Peluang data sekstrem ini jika H₀ benar.']];
+$('#cards').innerHTML=CARDS.map(c=>`<div class="flip" tabindex="0"><div class="in"><div class="fa">${c[0]}</div><div class="fb2">${c[1]}</div></div></div>`).join('');
+$$('.flip').forEach(f=>{f.onclick=()=>f.classList.toggle('on');f.onkeydown=e=>{if(e.key==='Enter')f.classList.toggle('on')}});
+
+
+/* ---------- SIMBOL ---------- */
+const SYM={
+ y:['y','Variabel dependen (yang dijelaskan)','Nilai asli yang diamati, misalnya harga rumah (price).','Rumah A terjual 320 ribu USD → y = 320'],
+ yi:['yᵢ','y milik observasi ke-i','Subskrip ᵢ menunjuk satu baris data (rumah ke-1, ke-2, … ke-n).','y₅ = harga rumah di baris ke-5'],
+ x:['x','Variabel independen / regresor','Faktor yang dipakai menjelaskan y, misalnya luas bangunan (sqrft).','x = 2.000 sqft'],
+ xi:['xᵢ','x milik observasi ke-i','Nilai x pada baris data ke-i.','x₅ = luas rumah ke-5'],
+ x1:['x₁','Regresor pertama','Dalam regresi berganda tiap variabel diberi nomor.','x₁ = sqrft'],
+ x2:['x₂','Regresor kedua','Variabel penjelas lain yang ikut dimasukkan.','x₂ = bdrms'],
+ xk:['xₖ','Regresor ke-k (terakhir)','k = banyaknya regresor dalam model (tidak termasuk konstanta).','Model dengan 4 variabel → k = 4'],
+ yhat:['ŷ','y-topi: nilai prediksi / fitted value','Tebakan model untuk y. Topi (^) selalu berarti “hasil estimasi dari sampel”. Di Stata: predict yhat, xb','ŷ = 291,2 untuk rumah 2.000 sqft'],
+ u:['u','Galat (error term)','Semua faktor lain yang memengaruhi y tapi tidak ada di model (lokasi, view, kualitas tetangga, keberuntungan). Tidak bisa diamati.','Tidak pernah diketahui angkanya'],
+ uhat:['û','u-topi: residual','Selisih y asli dengan prediksi: û = y − ŷ. Bisa dihitung. Positif = model menebak terlalu rendah. Di Stata: predict uhat, residuals','320 − 291,2 = +28,8'],
+ uhati:['ûᵢ','Residual observasi ke-i','Residual untuk satu rumah tertentu.','û₅ = residual rumah ke-5'],
+ b0:['β₀','Beta nol: intersep populasi','Nilai y ketika semua x = 0, versi “sejati” yang tak diketahui. β dibaca “beta”.','Titik potong garis dengan sumbu y'],
+ b1:['β₁','Beta satu: slope populasi','Perubahan y jika x naik 1 unit (ceteris paribus). Parameter sejati yang ingin kita tebak.','Efek sejati luas terhadap harga'],
+ b2:['β₂','Slope regresor kedua','Efek x₂ terhadap y dengan x lain tetap.','Efek 1 kamar tambahan'],
+ bk:['βₖ','Slope regresor ke-k','Koefisien untuk variabel terakhir.',''],
+ b0hat:['β̂₀','Beta-nol-topi: intersep hasil estimasi','Angka pada baris _cons di output Stata.','_cons = 11,20'],
+ b1hat:['β̂₁','Beta-satu-topi: slope hasil estimasi','Angka Coefficient untuk x di output Stata. Tebakan terbaik OLS untuk β₁.','sqrft = 0,140 → +1 sqft, harga +0,14 ribu USD'],
+ bjhat:['β̂ⱼ','Koefisien estimasi variabel ke-j','j = nomor variabel mana saja (1, 2, …, k).','β̂ⱼ untuk bdrms = 15,20'],
+ b1til:['β̃₁','Beta-satu-tilde','Tanda ~ (tilde) dipakai untuk estimasi dari model lain, di sini model sederhana yang “kekurangan” variabel.','Koefisien dari reg price bdrms saja'],
+ d1til:['δ̃₁','Delta-satu-tilde','Slope ketika x₂ diregresikan pada x₁: seberapa kuat variabel yang terlupa berhubungan dengan x₁.','reg sqrft bdrms → koefisien bdrms'],
+ xbar:['x̄','x-bar: rata-rata x','Garis di atas huruf = rata-rata sampel. x̄ = Σxᵢ / n.','Rata-rata luas = 2.014 sqft'],
+ ybar:['ȳ','y-bar: rata-rata y','Rata-rata nilai y di sampel.','Rata-rata harga = 293,5'],
+ 'Σ':['Σ','Sigma besar: jumlahkan','Jumlahkan ekspresi di sebelahnya untuk semua observasi i = 1 sampai n.','Σxᵢ = x₁ + x₂ + … + xₙ'],
+ min:['min','Minimumkan','Cari nilai parameter yang membuat ekspresi sekecil mungkin.',''],
+ argmax:['arg max','Argumen yang memaksimumkan','Bukan nilai maksimumnya, tapi parameter yang menghasilkan maksimum itu.','arg max ℓ(p) = 0,7'],
+ R2:['R²','R-kuadrat (koefisien determinasi)','Proporsi variasi y yang dijelaskan model, 0 sampai 1.','0,632 → 63% variasi harga terjelaskan'],
+ SST:['SST','Total Sum of Squares','Total variasi y: Σ(yᵢ − ȳ)². Baris “Total” kolom SS di Stata.','917.854'],
+ SSE:['SSE','Explained Sum of Squares','Variasi yang dijelaskan model: Σ(ŷᵢ − ȳ)². Baris “Model”.','580.009'],
+ SSR:['SSR','Residual Sum of Squares','Variasi sisa: Σûᵢ². Baris “Residual”. Inilah yang diminimumkan OLS.','337.845'],
+ SSTj:['SSTⱼ','Total variasi xⱼ','Σ(xᵢⱼ − x̄ⱼ)². Makin bervariasi x, makin presisi β̂ⱼ.',''],
+ Rj2:['Rⱼ²','R² regresi xⱼ pada regresor lain','Mengukur seberapa mirip xⱼ dengan variabel lain; tinggi = multikolinearitas. VIF = 1/(1−Rⱼ²).','Rⱼ² = 0,9 → VIF = 10'],
+ s2:['σ²','Sigma-kuadrat: varians galat','Seberapa “berisik” u. Diestimasi dengan σ̂² = SSR/(n−k−1); akarnya = Root MSE.','Root MSE 63,05 → σ̂² ≈ 3.975'],
+ Var:['Var','Varians','Ukuran sebaran. Var(β̂) = seberapa berbeda estimasi jika sampel diulang-ulang.',''],
+ E:['E','Ekspektasi (nilai harapan)','Rata-rata teoretis jika percobaan diulang tak terhingga kali. E(β̂) = β artinya tak bias.',''],
+ t:['t','Statistik t','Estimasi dibagi standard error. Dibandingkan dengan t kritis.','0,1284 / 0,0138 = 9,29'],
+ se:['se','Standard error','Ketidakpastian estimasi, kolom Std. err. di Stata.','se(sqrft) = 0,0138'],
+ CI:['CI','Confidence interval','Rentang nilai parameter yang masuk akal pada tingkat keyakinan tertentu.','[0,101 ; 0,156]'],
+ tc:['t_c','t kritis','Batas dari tabel t untuk α dan df tertentu. Stata: display invttail(df, α/2).','df 85, α 5% → 1,988'],
+ '±':['±','Plus-minus','Hitung dua kali: sekali ditambah (batas atas), sekali dikurang (batas bawah).',''],
+ ln:['ln','Logaritma natural','Log basis e ≈ 2,718. Di Stata: gen ly = ln(y). Perubahan kecil ln ≈ perubahan persen.','ln(1,10) ≈ 0,095 ≈ 10%'],
+ exp:['exp','Eksponensial eᶻ','Kebalikan ln. Dipakai untuk mengubah koefisien log menjadi persen persis atau rasio.','exp(0,25) = 1,284'],
+ harga:['harga','Variabel dependen (y)','Yang ingin dijelaskan.',''],
+ luas:['luas','Variabel penjelas (x)','Yang diduga memengaruhi harga.',''],
+ P:['P','Peluang (probability)','Nilai 0 sampai 1.','P = 0,65 → 65%'],
+ y1:['y=1','Kejadian “ya”','Pada y biner, 1 = terjadi (laku, bekerja), 0 = tidak.',''],
+ given:['|','“dengan syarat” / given','Dibaca “jika diketahui”. P(y=1 | x) = peluang y=1 untuk nilai x tertentu.','P(laku | diskon 10%)'],
+ G:['G','Fungsi link (penekuk)','Mengubah angka berapa pun menjadi 0–1. Logit: eᶻ/(1+eᶻ); probit: Φ(z) (CDF normal).','G(0) = 0,5'],
+ th:['θ','Theta: parameter','Simbol umum untuk parameter apa saja yang ingin diestimasi.',''],
+ thhat:['θ̂','Theta-topi','Estimasi parameter dengan metode maximum likelihood.',''],
+ f:['f','Fungsi kepadatan/peluang','Rumus peluang untuk satu observasi menurut distribusi yang dipilih.','Bernoulli: pʸ(1−p)¹⁻ʸ'],
+ ht:['h(t)','Hazard pada waktu t','Laju terjadinya kejadian (laku) sesaat di bulan t, untuk yang belum laku.',''],
+ h0t:['h₀(t)','Baseline hazard','Laju dasar ketika semua x = 0. Cox tidak perlu menebak bentuknya.',''],
+ xb:['xβ','Indeks linear','Singkatan β₁x₁ + β₂x₂ + … .',''],
+ yt:['yₜ','y pada periode t','Subskrip ₜ = waktu (bulan, kuartal).','Indeks harga Maret 2025'],
+ yt1:['yₜ₋₁','Lag 1 dari y','Nilai y satu periode sebelumnya. Stata: L.y',''],
+ c:['c','Konstanta','Intersep dalam model time series.',''],
+ phi:['φ','Phi: koefisien AR','Seberapa kuat “ingatan” terhadap nilai sebelumnya. |φ| < 1 agar stasioner.','φ = 0,7'],
+ th1:['θ₁','Theta-satu: koefisien MA','Seberapa besar kejutan kemarin masih terasa hari ini.',''],
+ et:['εₜ','Epsilon: kejutan (white noise) periode t','Galat acak dengan rata-rata 0 dan tidak berkorelasi antarwaktu.',''],
+ et1:['εₜ₋₁','Kejutan periode sebelumnya','',''],
+ yit:['yᵢₜ','y unit i pada waktu t','Data panel punya dua subskrip.','Harga di kabupaten i tahun t'],
+ xit:['xᵢₜ','x unit i pada waktu t','',''],
+ ai:['aᵢ','Efek individu tetap','Karakter unit yang tidak berubah sepanjang waktu dan tidak teramati.','“Daya tarik” Sleman'],
+ uit:['uᵢₜ','Galat idiosinkratik','Kejutan yang berubah antarunit dan antarwaktu.',''],
+};
+const mh=t=>t.replace(/(.)\u0302/g,'<span class="hat">$1</span>').replace(/(.)\u0303/g,'<span class="hat til">$1</span>');
+const OPS={'=':'sama dengan','+':'tambah','−':'kurang','·':'kali','/':'bagi','²':'kuadrat'};
+function symHTML(k){const d=SYM[k];return `<span class="sn"><span class="mth">${mh(d[0])}</span> · ${d[1]}</span><br>${d[2]}${d[3]?`<span class="ex">Contoh: ${d[3]}</span>`:''}`}
+$$('.bedah').forEach(b=>{const bf=b.querySelector('.bf'),bx=b.querySelector('.bx');const cap=bx.dataset.cap;
+  const reset=()=>{bx.innerHTML=`<b>Cara membaca:</b> ${cap}`};reset();
+  b.dataset.f.split('|').forEach(tok=>{if(SYM[tok]){const btn=document.createElement('button');btn.type='button';btn.className='sym';btn.innerHTML=mh(SYM[tok][0]);
+      btn.onclick=()=>{const was=btn.classList.contains('on');bf.querySelectorAll('.sym').forEach(s=>s.classList.remove('on'));if(was){reset();return}btn.classList.add('on');bx.innerHTML=symHTML(tok)};bf.appendChild(btn)}
+    else{const sp=document.createElement('span');sp.className='op';sp.textContent=tok;if(OPS[tok])sp.title=OPS[tok];bf.appendChild(sp)}});});
+const HAT=[['^','Topi (hat)','Hasil estimasi dari sampel. β = sejati, β̂ = tebakan kita.'],['‾','Bar','Rata-rata sampel, misalnya x̄.'],['~','Tilde','Estimasi dari model alternatif/terbatas.'],['ᵢ ₜ ⱼ','Subskrip','Penunjuk: i = observasi, t = waktu, j = variabel ke-j.']];
+const skip=new Set(['harga','luas','min','given','y1','et1','xit','bk','x2','xk','uhati','yi','xi']);
+function kamus(el,q){q=(q||'').toLowerCase();const rows=HAT.map(h=>['',h]).concat(Object.entries(SYM).filter(([k])=>!skip.has(k)).map(([k,d])=>[k,[d[0],d[1],d[2]+(d[3]?' Contoh: '+d[3]:'')]]))
+  .filter(([k,d])=>(d.join(' ')).toLowerCase().includes(q));
+  el.innerHTML='<div class="kamus">'+rows.map(([k,d])=>`<div class="km"><span class="g">${mh(d[0])}</span><div><b>${d[1]}</b><p>${d[2]}</p></div></div>`).join('')+'</div>'}
+kamus($('#kamusInline'));kamus($('#kamusDrawer'));
+$('#symQ').addEventListener('input',e=>kamus($('#kamusDrawer'),e.target.value));
+$('#fab').onclick=()=>{$('#drawer').hidden=false;$('#symQ').focus()};$('#drawerX').onclick=()=>{$('#drawer').hidden=true;$('#fab').focus()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#drawer').hidden=true});
+
+/* ---------- BOOT ---------- */
+function drawAll(){drawT();drawOLS();drawMLE();drawLogit();drawKM();drawAR()}
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>setTimeout(drawAll,50))}catch(e){}
+new MutationObserver(()=>setTimeout(drawAll,50)).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawAll);
+const h=location.hash.slice(1);const hi=mods.findIndex(m=>m.id===h);
+go(hi>=0?hi:store.get('epl_cur',0),true);
+})();
+</script>
+</body>
+</html>
